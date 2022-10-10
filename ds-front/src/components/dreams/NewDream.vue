@@ -14,13 +14,13 @@ const date = ref("");
 const menu = ref(false);
 const max = ref("");
 const dream = ref("");
-const dreams = ref([] as SubDream[]);
 const keywords = ref("");
+const dreams = ref([] as SubDream[]);
 const chips = ref([] as string[]);
 const snackbar = ref(false);
 const snackText = ref("");
 const timeModal = ref(false);
-const timeout = 30000;
+const timeout = 3000;
 const time = ref(
   new Date().toLocaleString("en-US", {
     hour: "numeric",
@@ -152,7 +152,7 @@ onMounted(() => {
             filled
             dense
           ></v-textarea>
-          <v-row class="mb-3">
+          <v-row class="mb-3 mt-0">
             <v-col cols="12">
               <v-btn
                 @click="addDream(dream)"
@@ -205,12 +205,13 @@ onMounted(() => {
           :hover="true"
         >
           <v-chip
-            v-for="(chip, i) in chips"
-            :key="chip + i"
+            v-for="(chip, index) in chips"
+            :key="chip + index"
             @click:close="removeKeyword(chip)"
             class="mx-1 mb-1"
+            closeable
             outlined
-            close
+            label
           >
             {{ chip }}
           </v-chip>
