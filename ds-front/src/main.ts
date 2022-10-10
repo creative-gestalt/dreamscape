@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import pinia from "@/plugins/pinia";
 import vuetify from "./plugins/vuetify";
+import VCalendar from "./plugins/calendar";
 import { alphaToHex } from "@/utils/constants";
 import { loadFonts } from "./plugins/webfontloader";
 
@@ -21,4 +22,4 @@ app.config.globalProperties.$filters = {
     return hex + alphaToHex[percentage];
   },
 };
-app.use(router).use(vuetify).use(pinia).mount("#app");
+app.use(router).use(vuetify).use(pinia).use(VCalendar, {}).mount("#app");

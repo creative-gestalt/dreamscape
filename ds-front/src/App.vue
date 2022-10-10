@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useMainStore } from "@/stores/main";
 import { useDisplay } from "vuetify";
-import { onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { useDreamStore } from "@/stores/dreams";
 import { useSessionStore } from "@/stores/sessions";
 
@@ -11,6 +11,7 @@ const sessionStore = useSessionStore();
 const loading = mainStore.gLoading;
 const colors = mainStore.gColors;
 const mobile = useDisplay().xs;
+const selectedNav = ref("dreams");
 
 onMounted(async () => {
   await mainStore.getSettings();
@@ -27,7 +28,7 @@ onMounted(async () => {
   <v-app id="app" :style="{ background: colors.backgroundColor }">
     <v-app-bar :color="colors.topBarColor" dark app>
       <div class="d-flex align-center pr-5">
-        <v-img class="ml-3" width="35" src="@/assets/ga-logo-black.png"></v-img>
+        <v-img class="ml-3" width="35" src="./assets/ga-logo-black.png"></v-img>
       </div>
       <v-app-bar-title
         class="text-no-wrap"
@@ -68,24 +69,29 @@ onMounted(async () => {
 
     <v-bottom-navigation
       v-if="mobile"
+      v-model="selectedNav"
       :background-color="colors.topBarColor"
-      grow="true"
+      :grow="true"
       shift
       app
     >
-      <v-btn :color="colors.topBarColor" to="/dreams">
+      <v-btn :color="colors.topBarColor" value="dreams" to="/dreams">
         <span :style="{ color: colors.iconColor }"> Dreams </span>
         <v-icon :color="colors.iconColor">mdi-sleep</v-icon>
       </v-btn>
-      <v-btn :color="colors.topBarColor" to="/sessions">
+      <v-btn :color="colors.topBarColor" value="sessions" to="/sessions">
         <span :style="{ color: colors.iconColor }"> Sessions </span>
         <v-icon :color="colors.iconColor"> mdi-notebook </v-icon>
       </v-btn>
-      <v-btn :color="colors.topBarColor" to="/dream-overview">
+      <v-btn
+        :color="colors.topBarColor"
+        value="dreams-overview"
+        to="/dream-overview"
+      >
         <span :style="{ color: colors.iconColor }"> Overview </span>
         <v-icon :color="colors.iconColor"> mdi-calendar </v-icon>
       </v-btn>
-      <v-btn :color="colors.topBarColor" to="/settings">
+      <v-btn :color="colors.topBarColor" value="settings" to="/settings">
         <span :style="{ color: colors.iconColor }"> Settings </span>
         <v-icon :color="colors.iconColor"> mdi-cog-outline </v-icon>
       </v-btn>

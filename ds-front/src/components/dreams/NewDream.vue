@@ -1,17 +1,14 @@
 <script lang="ts" setup>
+import { computed, onMounted, ref } from "vue";
 import { useMainStore } from "@/stores/main";
 import { useDreamStore } from "@/stores/dreams";
-// import { useDisplay } from "vuetify";
-import { computed, onMounted, ref } from "vue";
 import { SubDream } from "@/interfaces/dream.interface";
-
+// stores
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
-// const loading = mainStore.gLoading;
+// data
 const colors = mainStore.gColors;
-// const mobile = useDisplay().xs;
 const date = ref("");
-const menu = ref(false);
 const max = ref("");
 const dream = ref("");
 const keywords = ref("");
@@ -28,25 +25,22 @@ const time = ref(
     hour12: true,
   })
 );
-// refs
-const dreamRef = ref(null);
-const menuRef = ref(null);
-const timeRef = ref(null);
-
+// template refs
+const dreamRef = ref(null as any);
+const timeRef = ref(null as any);
+// computed
 const computedDay = computed(() =>
   date.value
-    ? new Date(date.value + mainStore.gDate().slice(10, 19)).toLocaleString(
-        "en-US",
-        { month: "short", day: "numeric" }
-      )
+    ? new Date(date.value).toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+      })
     : ""
 );
-
-function openTimeModal(): void {
-  timeModal.value = true;
-}
+// methods
 function setNewTime(): void {
-  time.value = String(timeRef.value);
+  time.value = String(timeRef.value.value);
+  timeModal.value = false;
 }
 function deleteSubDream(index: number): void {
   dreams.value.splice(index, 1);
@@ -54,15 +48,12 @@ function deleteSubDream(index: number): void {
 function removeKeyword(item: string): void {
   chips.value = [...chips.value].filter((k) => k !== item);
 }
-// function saveDate(date: Date) {
-// menuRef.value.save(date);
-// }
 function addDream(dreamText: string, refocus = true): void {
   if (dreamText) {
     dreams.value.push({ subDream: dreamText, time: time.value });
     dream.value = "";
     if (refocus) {
-      // if (dreamRef.value) dreamRef.value.focus();
+      if (dreamRef.value) dreamRef.value.focus();
     }
   } else {
     snackText.value = "Dream cannot be empty";
@@ -90,7 +81,7 @@ async function completeDream(): Promise<void> {
   if (dream.value.length > 0) addDream(dream.value, false);
   if (date.value && dreams.value.length > 0) {
     await dreamStore.addDream({
-      date: date.value + mainStore.gDate().slice(10, 19),
+      date: date.value,
       dreams: dreams.value,
       keywords:
         chips.value.length > 0
@@ -116,7 +107,7 @@ async function completeDream(): Promise<void> {
 }
 
 onMounted(() => {
-  date.value = max.value = mainStore.gDate().slice(0, 10);
+  date.value = max.value = mainStore.gDate();
 });
 </script>
 
@@ -136,7 +127,6 @@ onMounted(() => {
             class="mb-2 mx-1"
             :style="{ color: colors.textColor }"
             @click:close="deleteSubDream(index)"
-            outlined
             closable
             label
           >
@@ -149,8 +139,7 @@ onMounted(() => {
             rows="8"
             :messages="time"
             :color="colors.textColor"
-            filled
-            dense
+            density="compact"
           ></v-textarea>
           <v-row class="mb-3 mt-0">
             <v-col cols="12">
@@ -165,18 +154,17 @@ onMounted(() => {
             </v-col>
           </v-row>
           <v-row class="mt-n7">
-            <v-col class="pr-1" cols="6">
-              <v-menu
-                ref="menuRef"
-                v-model="menu"
-                :close-on-content-click="false"
-                transition="scale-transition"
-                min-width="auto"
-                offset-y
+            <v-col cols="6">
+              <v-date-picker
+                v-model="date"
+                :max-date="max"
+                min-date="1950-01-01"
+                :popover="{ visibility: 'click' }"
+                is-dark
               >
-                <template v-slot:activator="{ props }">
+                <template v-slot="{ inputEvents }">
                   <v-btn
-                    v-bind="props"
+                    v-on="inputEvents"
                     :color="colors.backgroundColor"
                     :style="{ color: colors.textColor }"
                     :block="true"
@@ -184,11 +172,11 @@ onMounted(() => {
                     {{ computedDay }}
                   </v-btn>
                 </template>
-              </v-menu>
+              </v-date-picker>
             </v-col>
             <v-col class="pl-1" cols="6">
               <v-btn
-                @click="openTimeModal"
+                @click="timeModal.value = true"
                 :color="colors.backgroundColor"
                 :style="{ color: colors.textColor }"
                 :block="true"
@@ -207,10 +195,10 @@ onMounted(() => {
           <v-chip
             v-for="(chip, index) in chips"
             :key="chip + index"
+            :style="{ color: colors.textColor }"
             @click:close="removeKeyword(chip)"
             class="mx-1 mb-1"
-            closeable
-            outlined
+            closable
             label
           >
             {{ chip }}
@@ -223,9 +211,7 @@ onMounted(() => {
             :color="colors.textColor"
             @click:append="addChip(keywords)"
             @keyup.enter="addChip(keywords)"
-            outlined
-            rounded
-            dense
+            density="compact"
           ></v-text-field>
         </v-card>
       </v-col>
@@ -252,12 +238,16 @@ onMounted(() => {
       </template>
     </v-snackbar>
 
-    <v-dialog v-model="timeModal" max-width="300">
+    <v-dialog v-model="timeModal" max-width="300" dark>
       <v-card :color="colors.topBarColor">
         <v-card-title>Set Time</v-card-title>
         <v-container>
-          <v-text-field ref="timeRef" :value="time" filled outlined>
-            {{ time }}
+          <v-text-field
+            ref="timeRef"
+            :model-value="time"
+            @keyup.enter="setNewTime"
+            autofocus
+          >
           </v-text-field>
           <v-btn
             @click="setNewTime"
