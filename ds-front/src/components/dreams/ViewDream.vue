@@ -1,10 +1,125 @@
+<script lang="ts" setup>
+import { computed, onMounted, ref } from "vue";
+import { useMainStore } from "@/stores/main";
+import { useDreamStore } from "@/stores/dreams";
+import { Dream, SubDream } from "@/interfaces/dream.interface";
+import { storeToRefs } from "pinia";
+import router from "@/router";
+
+//stores
+const mainStore = useMainStore();
+const dreamStore = useDreamStore();
+const { gColors } = storeToRefs(mainStore);
+const { gDate } = mainStore;
+const { getDream, updateDream, getDreamsForPage, deleteDreams } = dreamStore;
+// data
+const id = ref("");
+const dream = ref({} as Dream);
+const dreamTime = ref("");
+const keywords = ref("");
+const edit = ref(false);
+const date = ref("");
+const max = ref("");
+const message = ref("");
+const timeModal = ref(false);
+const selectedSubIndex = ref(0);
+const selectedSubDream = ref({} as SubDream);
+const editSheet = ref(false);
+const tapDelete = ref(false);
+const time = ref(
+  new Date().toLocaleString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  })
+);
+
+// computed
+const computedDay = computed(() =>
+  date.value
+    ? new Date(date.value).toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+      })
+    : ""
+);
+// methods
+function updateSubDream(): void {
+  dream.value.dreams[selectedSubIndex.value].subDream =
+    selectedSubDream.value.subDream;
+  dream.value.dreams[selectedSubIndex.value].time = selectedSubDream.value.time;
+  editSheet.value = false;
+  submitDream();
+}
+function openEditArea(subDream: SubDream, index: number): void {
+  selectedSubDream.value = subDream;
+  selectedSubIndex.value = index;
+  editSheet.value = true;
+}
+function addSubDream(): void {
+  dream.value.dreams.push({ subDream: "", time: time.value });
+  time.value = new Date().toLocaleString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  });
+  const index = dream.value.dreams.length - 1;
+  openEditArea(dream.value.dreams[index], index);
+}
+function deleteSubDream(): void {
+  dream.value.dreams.splice(selectedSubIndex.value, 1);
+  editSheet.value = false;
+  tapDelete.value = false;
+  submitDream();
+}
+function removeKeyword(item: string): void {
+  dream.value.keywords = [...dream.value.keywords].filter((k) => k !== item);
+  submitDream();
+}
+function addChip(value: string): void {
+  dream.value.keywords.push(value);
+  keywords.value = "";
+  submitDream();
+}
+async function submitDream(): Promise<void> {
+  await updateDream({
+    _id: id.value,
+    date: dream.value.date + dreamTime.value,
+    dreams: dream.value.dreams,
+    keywords: dream.value.keywords.length > 0 ? dream.value.keywords : [],
+  });
+  await getDreamsForPage({
+    skip: 0,
+    limit: 13,
+  });
+}
+async function deleteDream(): Promise<void> {
+  const answer = confirm("Are you sure?");
+  if (answer) {
+    await deleteDreams([dream.value]);
+    await getDreamsForPage({
+      skip: 0,
+      limit: 13,
+    });
+    await router.push("/dreams");
+  }
+}
+
+onMounted(async () => {
+  id.value = String(router.currentRoute.value.params.id);
+  dream.value = await getDream({ _id: id.value } as Dream);
+  dreamTime.value = dream.value.date.slice(11, 19);
+  dream.value.date = dream.value.date.slice(0, 10);
+  max.value = gDate();
+});
+</script>
+
 <template>
   <v-container>
     <v-btn
       v-if="edit"
       @click="addSubDream"
       :color="gColors.completeBtnColor"
-      light
       fixed
       right
       bottom
@@ -16,34 +131,28 @@
       <v-container class="pb-0 mb-n2">
         <v-row align="center" justify="center" no-gutters>
           <v-col cols="8">
-            <v-menu
-              ref="menu"
-              v-model="menu"
-              :close-on-content-click="false"
-              transition="scale-transition"
-              min-width="auto"
-              offset-y
+            <v-date-picker
+              v-model="date"
+              :max-date="max"
+              min-date="1950-01-01"
+              :popover="{ visibility: 'click' }"
+              :style="{
+                backgroundColor: gColors.backgroundColor,
+                borderRadius: '10px',
+              }"
+              is-dark
             >
-              <template v-slot:activator="{ on, attrs }">
-                <v-card
-                  v-bind="attrs"
-                  v-on="on"
-                  :color="gColors.backgroundColor | alpha('50%')"
-                  outlined
+              <template v-slot="{ inputEvents }">
+                <v-btn
+                  v-on="inputEvents"
+                  :color="gColors.backgroundColor"
+                  :style="{ color: gColors.textColor }"
+                  :block="true"
                 >
-                  <v-card-title :style="{ color: gColors.textColor }">
-                    {{ computedDate }}
-                  </v-card-title>
-                </v-card>
+                  {{ computedDay }}
+                </v-btn>
               </template>
-              <v-date-picker
-                v-model="dream.date"
-                :max="max"
-                min="1950-01-01"
-                @change="saveDate"
-                show-adjacent-months
-              ></v-date-picker>
-            </v-menu>
+            </v-date-picker>
           </v-col>
           <v-col cols="4" class="d-flex justify-end">
             <v-fade-transition>
@@ -76,7 +185,7 @@
           v-for="(dream, i) of dream.dreams"
           :key="i"
           class="my-5"
-          :color="gColors.backgroundColor | alpha('50%')"
+          :color="gColors.backgroundColor"
           outlined
         >
           <v-row align="center" justify="center">
@@ -106,14 +215,12 @@
           <v-card-subtitle
             v-html="dream.subDream.replaceAll('\n', '<br/>')"
             class="text-left"
-            :style="gColors.textColor | alpha('70%', true, 'color')"
+            :style="{ color: gColors.textColor }"
           ></v-card-subtitle>
         </v-card>
       </v-container>
       <v-card-subtitle>
-        <div :style="gColors.textColor | alpha('70%', true, 'color')">
-          keywords
-        </div>
+        <div :style="{ color: gColors.textColor }">keywords</div>
         <v-divider class="pb-2"></v-divider>
         <v-chip
           v-for="(keyword, i) of dream.keywords"
@@ -204,127 +311,3 @@
     </v-dialog>
   </v-container>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Dream, SubDream } from "@/interfaces/dream.interface";
-import { mapState, mapStores } from "pinia";
-import { useMainStore } from "@/stores/main";
-import { useDreamStore } from "@/stores/dreams";
-
-export default Vue.extend({
-  name: "ViewDream",
-  async created() {
-    this.id = String(this.$route.params.id);
-    this.dream = await this.dreamsStore.getDream({ _id: this.id } as Dream);
-    this.dreamTime = this.dream.date.slice(10, 19);
-    this.dream.date = this.dream.date.slice(0, 10);
-    this.max = this.gDate().slice(0, 10);
-  },
-  data: () => ({
-    id: "",
-    dream: {} as Dream,
-    dreamTime: "",
-    keywords: "",
-    edit: false,
-    date: "",
-    menu: false,
-    max: "",
-    message: "No Time Set",
-    time: new Date().toLocaleString("en-US", {
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    }),
-    timeModal: false,
-    selectedSubIndex: 0,
-    selectedSubDream: {} as SubDream,
-    editSheet: false,
-    tapDelete: false,
-  }),
-  methods: {
-    updateSubDream(): void {
-      this.dream.dreams[this.selectedSubIndex].subDream =
-        this.selectedSubDream.subDream;
-      this.dream.dreams[this.selectedSubIndex].time =
-        this.selectedSubDream.time;
-      this.editSheet = false;
-      this.submitDream();
-    },
-    openEditArea(subDream: SubDream, index: number): void {
-      this.selectedSubDream = subDream;
-      this.selectedSubIndex = index;
-      this.editSheet = true;
-    },
-    addSubDream(): void {
-      this.dream.dreams.push({ subDream: "", time: this.time });
-      this.time = new Date().toLocaleString("en-US", {
-        hour: "numeric",
-        minute: "numeric",
-        hour12: true,
-      });
-      const index = this.dream.dreams.length - 1;
-      this.openEditArea(this.dream.dreams[index], index);
-    },
-    deleteSubDream(): void {
-      this.dream.dreams.splice(this.selectedSubIndex, 1);
-      this.editSheet = false;
-      this.tapDelete = false;
-      this.submitDream();
-    },
-    removeKeyword(item: string): void {
-      this.dream.keywords = [...this.dream.keywords].filter((k) => k !== item);
-      this.submitDream();
-    },
-    addChip(value: string): void {
-      this.dream.keywords.push(value);
-      this.keywords = "";
-      this.submitDream();
-    },
-    saveDate(date: Date) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      this.$refs.menu.save(date);
-      this.submitDream();
-    },
-    async submitDream(): Promise<void> {
-      await this.dreamsStore.updateDream({
-        _id: this.id,
-        date: this.dream.date + this.dreamTime,
-        dreams: this.dream.dreams,
-        keywords: this.dream.keywords.length > 0 ? this.dream.keywords : [],
-      });
-      await this.dreamsStore.getDreamsForPage({
-        skip: 0,
-        limit: 13,
-      });
-    },
-    async deleteDream(): Promise<void> {
-      const answer = confirm("Are you sure?");
-      if (answer) {
-        await this.dreamsStore.deleteDreams([this.dream]);
-        await this.dreamsStore.getDreamsForPage({
-          skip: 0,
-          limit: 13,
-        });
-        await this.$router.push("/dreams");
-      }
-    },
-  },
-  computed: {
-    ...mapStores(useMainStore, useDreamStore),
-    ...mapState(useMainStore, ["gDate", "gColors"]),
-    ...mapState(useDreamStore, ["gDreams", "gDreamsCount"]),
-    computedDate(): string {
-      return this.dream.date
-        ? new Date(this.dream.date + this.dreamTime).toLocaleString("en-US", {
-            weekday: "short",
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          })
-        : "";
-    },
-  },
-});
-</script>

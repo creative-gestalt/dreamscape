@@ -26,8 +26,7 @@ const compPages = computed(() =>
 );
 // methods
 function handleClick(dream: Dream): void {
-  console.log(dream);
-  // router.push(`/dream/${dream._id}`);
+  router.push(`/dream/${dream._id}`);
 }
 function formatDreamDate(date: string): string {
   return new Date(date).toLocaleString("en-US", {

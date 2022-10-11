@@ -218,7 +218,6 @@ onMounted(() => {
         @click="completeSession"
         :color="gColors.completeBtnColor"
         :block="true"
-        light
       >
         Complete
       </v-btn>
