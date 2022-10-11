@@ -160,6 +160,10 @@ onMounted(() => {
                 :max-date="max"
                 min-date="1950-01-01"
                 :popover="{ visibility: 'click' }"
+                :style="{
+                  backgroundColor: colors.backgroundColor,
+                  borderRadius: '10px',
+                }"
                 is-dark
               >
                 <template v-slot="{ inputEvents }">
@@ -176,7 +180,7 @@ onMounted(() => {
             </v-col>
             <v-col class="pl-1" cols="6">
               <v-btn
-                @click="timeModal.value = true"
+                @click="timeModal = true"
                 :color="colors.backgroundColor"
                 :style="{ color: colors.textColor }"
                 :block="true"

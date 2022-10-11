@@ -24,10 +24,10 @@ export const useMainStore = defineStore(
     const gLoading = computed(() => loading.value);
 
     function gDate(): string {
-      return new Date().toISOString();
-      // const offsetMs = now.getTimezoneOffset() * 60 * 1000;
-      // const dateLocal = new Date(now.getTime() - offsetMs);
-      // return dateLocal.toISOString().slice(0, 19);
+      const now = new Date();
+      const offsetMs = now.getTimezoneOffset() * 60 * 1000;
+      const dateLocal = new Date(now.getTime() - offsetMs);
+      return dateLocal.toISOString();
     }
     async function reset(): Promise<void> {
       settings.value = {
