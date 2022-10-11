@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 // eslint-disable-next-line no-undef
-const props = defineProps({
-  toggle: Boolean,
-  timeout: Number,
-  snackText: String,
-});
+const props = defineProps<{
+  toggle: boolean;
+  timeout: number;
+  snackText: string;
+}>();
 </script>
 
 <template>

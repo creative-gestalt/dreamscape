@@ -17,10 +17,6 @@ const { getAllSessions } = sessionStore;
 const mobile = useDisplay().xs;
 const selectedNav = ref("0");
 
-function test(value: any): void {
-  console.log(value);
-}
-
 onMounted(async () => {
   await getSettings();
   await getDreamsForPage({

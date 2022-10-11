@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import NewDream from "@/components/dreams/NewDream.vue";
+import DreamList from "@/components/dreams/DreamList.vue";
 import { useMainStore } from "@/stores/main";
 import { useDreamStore } from "@/stores/dreams";
 import { useDisplay } from "vuetify";
@@ -47,6 +48,9 @@ onMounted(() => {
       <v-window v-model="tab">
         <v-window-item transition="slide-y-transition">
           <NewDream v-show="tab === 0" />
+        </v-window-item>
+        <v-window-item transition="slide-y-transition">
+          <DreamList v-show="tab === 1" />
         </v-window-item>
       </v-window>
     </div>
