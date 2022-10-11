@@ -12,17 +12,15 @@ const colors = mainStore.gColors;
 const mobile = useDisplay().xs;
 const show = ref(false);
 const tab = ref(0);
-const selectedTab = ref(0);
-const tabs = ref(["New", "List"]);
 
 function handleTabs(index: number): void {
-  selectedTab.value = index;
+  tab.value = index;
   dreamStore.updateCurrentTab(index);
 }
 
 onMounted(() => {
   setTimeout(() => (show.value = true), 100);
-  selectedTab.value = dreamStore.currentTab;
+  tab.value = dreamStore.currentTab;
 });
 </script>
 
@@ -30,27 +28,23 @@ onMounted(() => {
   <v-fade-transition hide-on-leave>
     <div v-if="show">
       <v-tabs
-        v-model="tab"
+        :model-value="tab"
+        @update:modelValue="handleTabs"
         :color="colors.textColor"
-        :background-color="colors.backgroundColor"
+        :bg-color="colors.backgroundColor"
         :grow="mobile"
         :centered="true"
       >
-        <v-tab
-          v-for="(tab, index) in tabs"
-          :key="tab"
-          @change="handleTabs(index)"
-        >
-          {{ tab }}
-        </v-tab>
+        <v-tab :value="0">New</v-tab>
+        <v-tab :value="1">all</v-tab>
       </v-tabs>
 
       <v-window v-model="tab">
-        <v-window-item transition="slide-y-transition">
-          <NewDream v-show="tab === 0" />
+        <v-window-item :value="0">
+          <NewDream />
         </v-window-item>
-        <v-window-item transition="slide-y-transition">
-          <DreamList v-show="tab === 1" />
+        <v-window-item :value="1">
+          <DreamList />
         </v-window-item>
       </v-window>
     </div>

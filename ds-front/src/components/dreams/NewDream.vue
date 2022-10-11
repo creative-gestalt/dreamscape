@@ -224,13 +224,12 @@ onMounted(() => {
       </v-col>
     </v-row>
 
-    <v-card class="ma-auto" max-width="800">
+    <v-card class="ma-auto" color="transparent" max-width="800">
       <v-btn
         class="mt-5"
         @click="completeDream"
         :color="gColors.completeBtnColor"
         :block="true"
-        light
       >
         Complete
       </v-btn>

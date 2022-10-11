@@ -6,6 +6,7 @@ import { useDreamStore } from "@/stores/dreams";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
 import { Dream } from "@/interfaces/dream.interface";
+import { sleep } from "@/utils/constants";
 // stores
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
@@ -15,7 +16,7 @@ const { gDreams, dreamsCount } = storeToRefs(dreamStore);
 const { updateLoading } = mainStore;
 const { getDreamsForPage, getDreamsCount } = dreamStore;
 const search = ref("");
-const currentPage = ref(0);
+const currentPage = ref(1);
 const itemsPerPage = ref(8);
 const perPage = ref([8, 10, 15, 20]);
 const headers = [{ name: "Date", visible: false }];
@@ -37,6 +38,7 @@ function formatDreamDate(date: string): string {
 }
 async function dreamsForPage(pageNumber: number): Promise<void> {
   await updateLoading(true);
+  await sleep(250);
   currentPage.value = pageNumber;
   const skip = (pageNumber - 1) * itemsPerPage.value;
   await getDreamsForPage({
@@ -56,61 +58,71 @@ onMounted(async () => {
 
 <template>
   <v-card class="ma-2 ma-auto" max-width="800" :color="gColors.topBarColor">
-    <v-card-title class="ma-0 pa-1 pb-0">
-      <v-row>
-        <v-col class="pr-0" cols="9">
-          <v-text-field
-            v-model="search"
-            append-inner-icon="mdi-magnify"
-            label="Search"
-            @click:clear="dreamsForPage(1)"
-            density="compact"
-            single-line
-            hide-details
-            clearable
-          ></v-text-field>
-        </v-col>
-        <v-col class="pl-1">
-          <v-select
-            v-model="itemsPerPage"
-            :items="perPage"
-            class="ml-1"
-            style="max-width: 75px"
-            density="compact"
-            hide-details
-          >
-          </v-select>
-        </v-col>
-      </v-row>
-    </v-card-title>
     <DataTable
       :items="gDreams"
       :headers="headers"
       :style="{ backgroundColor: gColors.topBarColor }"
-      item-key="_id"
+      :items-per-page="itemsPerPage"
       @click:row="handleClick"
-      dense
     >
+      <template #search>
+        <v-row class="pa-2">
+          <v-col class="pr-0 flex-grow-1">
+            <v-text-field
+              v-model="search"
+              append-inner-icon="mdi-magnify"
+              label="Search"
+              @click:clear="dreamsForPage(1)"
+              density="compact"
+              single-line
+              hide-details
+              clearable
+            ></v-text-field>
+          </v-col>
+          <v-col class="pl-1">
+            <v-select
+              v-model="itemsPerPage"
+              @change="dreamsForPage(1)"
+              :items="perPage"
+              class="ml-1"
+              style="max-width: 75px"
+              density="compact"
+              hide-details
+            >
+            </v-select>
+          </v-col>
+        </v-row>
+      </template>
       <template #item="{ item }">
         <div :style="{ color: gColors.textColor }">
-          <v-list-item
-            :append-avatar="String(item.dreams.length)"
-            :title="formatDreamDate(item.date)"
-            density="compact"
-            link
-          >
-            <v-list-item-subtitle>
-              {{ item.dreams[0].subDream }}
-            </v-list-item-subtitle>
+          <v-list-item class="px-0" density="compact" link>
+            <template #prepend>
+              <v-avatar class="mx-0 ml-n3">{{ item.dreams.length }}</v-avatar>
+            </template>
+            <template #title>
+              <span :style="{ color: gColors.textColor }">
+                {{ formatDreamDate(item.date) }}
+              </span>
+            </template>
+            <template #subtitle>
+              <span
+                class="single-line__text"
+                :style="{ color: gColors.textColor }"
+              >
+                {{ item.dreams[0].subDream }}
+              </span>
+            </template>
           </v-list-item>
         </div>
       </template>
     </DataTable>
     <v-pagination
-      v-model="currentPage"
+      :model-value="currentPage"
+      @update:modelValue="dreamsForPage"
       :length="compPages"
-      @input="dreamsForPage"
-      :color="gColors.completeBtnColor"
+      :active-color="gColors.completeBtnColor"
+      density="comfortable"
+      variant="elevated"
     >
     </v-pagination>
   </v-card>
@@ -122,5 +134,8 @@ onMounted(async () => {
 }
 .v-pagination__item {
   opacity: 0.6;
+}
+.v-list-item__prepend {
+  padding-left: 0;
 }
 </style>

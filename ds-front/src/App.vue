@@ -46,16 +46,16 @@ onMounted(async () => {
       <v-spacer></v-spacer>
 
       <div v-if="!mobile">
-        <v-btn to="/dreams" text>
+        <v-btn to="/dreams" variant="text">
           <v-icon :color="gColors.iconColor"> mdi-sleep </v-icon>
         </v-btn>
-        <v-btn to="/sessions" text>
+        <v-btn to="/sessions" variant="text">
           <v-icon :color="gColors.iconColor"> mdi-notebook </v-icon>
         </v-btn>
-        <v-btn to="/dream-overview" text>
+        <v-btn to="/dream-overview" variant="text">
           <v-icon :color="gColors.iconColor">mdi-calendar</v-icon>
         </v-btn>
-        <v-btn to="/settings" text>
+        <v-btn to="/settings" variant="text">
           <v-icon :color="gColors.iconColor"> mdi-cog-outline </v-icon>
         </v-btn>
       </div>
@@ -107,7 +107,6 @@ onMounted(async () => {
 <style lang="scss">
 $scrollbar-bg-color: #171717;
 $scrollbar-thumb-color: #898989;
-$app-title-bar-width: 125px;
 
 html {
   background-color: black;
@@ -120,9 +119,6 @@ html {
 ::-webkit-scrollbar-thumb {
   border-radius: 50px;
   background-color: $scrollbar-thumb-color;
-}
-.v-app-bar-title__content {
-  width: $app-title-bar-width !important;
 }
 .ios-overlay {
   height: 125px;

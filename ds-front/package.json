@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vite preview",
-    "serve-net": "vite preview --host",
+    "serve-build": "vite preview",
+    "serve-build-host": "vite preview --host",
     "build": "vite build",
     "lint": "vue-cli-service lint",
     "dev": "vite",
-    "dev-net": "vite --host"
+    "dev-host": "vite --host"
   },
   "dependencies": {
     "@mdi/font": "5.9.55",
