@@ -3,21 +3,24 @@ import { computed, onMounted, ref } from "vue";
 import { useMainStore } from "@/stores/main";
 import { useDreamStore } from "@/stores/dreams";
 import { SubDream } from "@/interfaces/dream.interface";
+import { storeToRefs } from "pinia";
+import SnackBar from "@/components/shared/SnackBar.vue";
 // stores
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
 // data
-const colors = mainStore.gColors;
+const { gColors } = storeToRefs(mainStore);
+const { gDate } = mainStore;
 const date = ref("");
 const max = ref("");
 const dream = ref("");
 const keywords = ref("");
 const dreams = ref([] as SubDream[]);
 const chips = ref([] as string[]);
+const timeout = 3000;
 const snackbar = ref(false);
 const snackText = ref("");
 const timeModal = ref(false);
-const timeout = 3000;
 const time = ref(
   new Date().toLocaleString("en-US", {
     hour: "numeric",
@@ -107,7 +110,7 @@ async function completeDream(): Promise<void> {
 }
 
 onMounted(() => {
-  date.value = max.value = mainStore.gDate();
+  date.value = max.value = gDate();
 });
 </script>
 
@@ -118,14 +121,14 @@ onMounted(() => {
         <v-card
           class="pa-2 ma-auto"
           max-width="800"
-          :color="colors.topBarColor"
+          :color="gColors.topBarColor"
           :hover="true"
         >
           <v-chip
             v-for="(dream, index) of dreams"
             :key="dream + index"
             class="mb-2 mx-1"
-            :style="{ color: colors.textColor }"
+            :style="{ color: gColors.textColor }"
             @click:close="deleteSubDream(index)"
             closable
             label
@@ -138,15 +141,15 @@ onMounted(() => {
             label="Dream"
             rows="8"
             :messages="time"
-            :color="colors.textColor"
+            :color="gColors.textColor"
             density="compact"
           ></v-textarea>
           <v-row class="mb-3 mt-0">
             <v-col cols="12">
               <v-btn
                 @click="addDream(dream)"
-                :color="colors.backgroundColor"
-                :style="{ color: colors.textColor }"
+                :color="gColors.backgroundColor"
+                :style="{ color: gColors.textColor }"
                 :block="true"
               >
                 Add Dream
@@ -161,7 +164,7 @@ onMounted(() => {
                 min-date="1950-01-01"
                 :popover="{ visibility: 'click' }"
                 :style="{
-                  backgroundColor: colors.backgroundColor,
+                  backgroundColor: gColors.backgroundColor,
                   borderRadius: '10px',
                 }"
                 is-dark
@@ -169,8 +172,8 @@ onMounted(() => {
                 <template v-slot="{ inputEvents }">
                   <v-btn
                     v-on="inputEvents"
-                    :color="colors.backgroundColor"
-                    :style="{ color: colors.textColor }"
+                    :color="gColors.backgroundColor"
+                    :style="{ color: gColors.textColor }"
                     :block="true"
                   >
                     {{ computedDay }}
@@ -181,8 +184,8 @@ onMounted(() => {
             <v-col class="pl-1" cols="6">
               <v-btn
                 @click="timeModal = true"
-                :color="colors.backgroundColor"
-                :style="{ color: colors.textColor }"
+                :color="gColors.backgroundColor"
+                :style="{ color: gColors.textColor }"
                 :block="true"
               >
                 <v-icon>mdi-clock-outline</v-icon>
@@ -193,13 +196,13 @@ onMounted(() => {
         <v-card
           class="pa-2 mt-5 ma-auto"
           max-width="800"
-          :color="colors.topBarColor"
+          :color="gColors.topBarColor"
           :hover="true"
         >
           <v-chip
             v-for="(chip, index) in chips"
             :key="chip + index"
-            :style="{ color: colors.textColor }"
+            :style="{ color: gColors.textColor }"
             @click:close="removeKeyword(chip)"
             class="mx-1 mb-1"
             closable
@@ -212,7 +215,7 @@ onMounted(() => {
             v-model="keywords"
             label="Keywords"
             append-icon="mdi-check"
-            :color="colors.textColor"
+            :color="gColors.textColor"
             @click:append="addChip(keywords)"
             @keyup.enter="addChip(keywords)"
             density="compact"
@@ -225,7 +228,7 @@ onMounted(() => {
       <v-btn
         class="mt-5"
         @click="completeDream"
-        :color="colors.completeBtnColor"
+        :color="gColors.completeBtnColor"
         :block="true"
         light
       >
@@ -233,17 +236,15 @@ onMounted(() => {
       </v-btn>
     </v-card>
 
-    <v-snackbar v-model="snackbar" :timeout="timeout" dark>
-      {{ snackText }}
-      <template v-slot:actions>
-        <v-btn color="black" variant="text" @click="snackbar = false">
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
+    <SnackBar
+      :toggle="snackbar"
+      :timeout="timeout"
+      :snack-text="snackText"
+      @closeSnackbar="snackbar = false"
+    ></SnackBar>
 
     <v-dialog v-model="timeModal" max-width="300" dark>
-      <v-card :color="colors.topBarColor">
+      <v-card :color="gColors.topBarColor">
         <v-card-title>Set Time</v-card-title>
         <v-container>
           <v-text-field
@@ -255,9 +256,8 @@ onMounted(() => {
           </v-text-field>
           <v-btn
             @click="setNewTime"
-            :color="colors.completeBtnColor"
+            :color="gColors.completeBtnColor"
             :block="true"
-            light
           >
             Set
           </v-btn>

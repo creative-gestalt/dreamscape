@@ -3,6 +3,7 @@ import { useMainStore } from "@/stores/main";
 import { useSessionStore } from "@/stores/sessions";
 import { useDisplay } from "vuetify";
 import { onMounted, ref } from "vue";
+import NewSession from "@/components/sessions/NewSession.vue";
 
 const mainStore = useMainStore();
 const sessionStore = useSessionStore();
@@ -34,13 +35,19 @@ onMounted(() => {
         :grow="mobile"
         :centered="true"
       >
-        <v-tab v-for="(tab, i) in tabs" :key="tab" @change="handleTabs(i)">
+        <v-tab
+          v-for="(tab, index) in tabs"
+          :key="tab"
+          @change="handleTabs(index)"
+        >
           {{ tab }}
         </v-tab>
       </v-tabs>
 
       <v-window v-model="tab">
-        <v-window-item transition="slide-y-transition"> </v-window-item>
+        <v-window-item transition="slide-y-transition">
+          <NewSession />
+        </v-window-item>
       </v-window>
     </div>
   </v-fade-transition>

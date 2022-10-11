@@ -35,7 +35,11 @@ onMounted(() => {
         :grow="mobile"
         :centered="true"
       >
-        <v-tab v-for="(tab, i) in tabs" :key="tab" @change="handleTabs(i)">
+        <v-tab
+          v-for="(tab, index) in tabs"
+          :key="tab"
+          @change="handleTabs(index)"
+        >
           {{ tab }}
         </v-tab>
       </v-tabs>
