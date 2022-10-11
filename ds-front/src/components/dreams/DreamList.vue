@@ -60,9 +60,9 @@ onMounted(async () => {
     <DataTable
       :items="gDreams"
       :headers="headers"
-      :style="{ backgroundColor: gColors.topBarColor }"
       :items-per-page="itemsPerPage"
       @click:row="handleClick"
+      :bg-color="gColors.topBarColor"
     >
       <template #search>
         <v-row class="pa-2">

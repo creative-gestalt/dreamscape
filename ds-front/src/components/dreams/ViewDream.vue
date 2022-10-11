@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, onBeforeMount, ref } from "vue";
 import { useMainStore } from "@/stores/main";
 import { useDreamStore } from "@/stores/dreams";
 import { Dream, SubDream } from "@/interfaces/dream.interface";
 import { storeToRefs } from "pinia";
+import { useDisplay } from "vuetify";
 import router from "@/router";
 
 //stores
@@ -13,6 +14,7 @@ const { gColors } = storeToRefs(mainStore);
 const { gDate } = mainStore;
 const { getDream, updateDream, getDreamsForPage, deleteDreams } = dreamStore;
 // data
+const mobile = useDisplay().xs;
 const id = ref("");
 const dream = ref({} as Dream);
 const dreamTime = ref("");
@@ -20,8 +22,6 @@ const keywords = ref("");
 const edit = ref(false);
 const date = ref("");
 const max = ref("");
-const message = ref("");
-const timeModal = ref(false);
 const selectedSubIndex = ref(0);
 const selectedSubDream = ref({} as SubDream);
 const editSheet = ref(false);
@@ -36,8 +36,8 @@ const time = ref(
 
 // computed
 const computedDay = computed(() =>
-  date.value
-    ? new Date(date.value).toLocaleString("en-US", {
+  dream.value.date
+    ? new Date(dream.value.date).toLocaleString("en-US", {
         month: "short",
         day: "numeric",
       })
@@ -105,12 +105,11 @@ async function deleteDream(): Promise<void> {
   }
 }
 
-onMounted(async () => {
+onBeforeMount(async () => {
   id.value = String(router.currentRoute.value.params.id);
   dream.value = await getDream({ _id: id.value } as Dream);
   dreamTime.value = dream.value.date.slice(11, 19);
   dream.value.date = dream.value.date.slice(0, 10);
-  max.value = gDate();
 });
 </script>
 
@@ -120,19 +119,24 @@ onMounted(async () => {
       v-if="edit"
       @click="addSubDream"
       :color="gColors.completeBtnColor"
-      fixed
-      right
-      bottom
-      fab
+      position="fixed"
+      location="bottom right"
+      rounded
     >
       +
     </v-btn>
-    <v-card class="ma-auto mb-16" :color="gColors.topBarColor" max-width="800">
+    <v-card
+      class="ma-auto mb-16"
+      :color="gColors.topBarColor"
+      max-width="800"
+      variant="outlined"
+      :style="{ minHeight: '75vh' }"
+    >
       <v-container class="pb-0 mb-n2">
         <v-row align="center" justify="center" no-gutters>
           <v-col cols="8">
             <v-date-picker
-              v-model="date"
+              v-model="dream.date"
               :max-date="max"
               min-date="1950-01-01"
               :popover="{ visibility: 'click' }"
@@ -147,6 +151,7 @@ onMounted(async () => {
                   v-on="inputEvents"
                   :color="gColors.backgroundColor"
                   :style="{ color: gColors.textColor }"
+                  variant="outlined"
                   :block="true"
                 >
                   {{ computedDay }}
@@ -156,18 +161,28 @@ onMounted(async () => {
           </v-col>
           <v-col cols="4" class="d-flex justify-end">
             <v-fade-transition>
-              <v-btn v-if="edit" class="mr-3" @click="edit = false" icon>
-                <v-icon color="orange"> mdi-window-close </v-icon>
-              </v-btn>
-              <v-btn v-else class="mr-3" @click="edit = true" icon>
-                <v-icon :color="gColors.iconColor" dark>mdi-pencil</v-icon>
-              </v-btn>
+              <v-icon
+                v-if="edit"
+                class="mr-3"
+                @click="edit = false"
+                color="orange"
+              >
+                mdi-window-close
+              </v-icon>
+              <v-icon
+                v-else
+                class="mr-3"
+                @click="edit = true"
+                :color="gColors.iconColor"
+              >
+                mdi-pencil
+              </v-icon>
             </v-fade-transition>
             <v-menu min-width="175" offset-x left>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on" icon>
-                  <v-icon :color="gColors.iconColor" dark> mdi-menu </v-icon>
-                </v-btn>
+              <template #activator="{ props }">
+                <v-icon v-bind="props" :color="gColors.iconColor">
+                  mdi-menu
+                </v-icon>
               </template>
               <v-list :color="gColors.backgroundColor">
                 <v-list-item link>
@@ -182,28 +197,28 @@ onMounted(async () => {
       </v-container>
       <v-container>
         <v-card
-          v-for="(dream, i) of dream.dreams"
-          :key="i"
-          class="my-5"
-          :color="gColors.backgroundColor"
-          outlined
+          v-for="(dream, index) of dream.dreams"
+          :key="index"
+          class="py-4 my-5"
+          :color="gColors.topBarColor"
+          variant="outlined"
         >
           <v-row align="center" justify="center">
-            <v-col cols="6">
+            <v-col cols="8">
               <v-card-subtitle
-                class="text-left"
+                class="text-left pb-3"
                 :style="{ color: gColors.textColor }"
               >
-                Dream {{ i + 1 }} -
+                Dream {{ index + 1 }} -
                 {{ dream.time ? dream.time : "No Time Set" }}
               </v-card-subtitle>
             </v-col>
-            <v-col cols="6">
-              <v-card-subtitle class="text-right">
+            <v-col cols="4">
+              <v-card-subtitle class="text-right pb-3">
                 <v-fab-transition hide-on-leave>
                   <v-icon
                     v-if="edit"
-                    @click="openEditArea(dream, i)"
+                    @click="openEditArea(dream, index)"
                     color="orange"
                   >
                     mdi-pencil
@@ -213,18 +228,19 @@ onMounted(async () => {
             </v-col>
           </v-row>
           <v-card-subtitle
-            v-html="dream.subDream.replaceAll('\n', '<br/>')"
-            class="text-left"
+            class="text-left text-wrap"
             :style="{ color: gColors.textColor }"
-          ></v-card-subtitle>
+          >
+            {{ dream.subDream }}
+          </v-card-subtitle>
         </v-card>
       </v-container>
       <v-card-subtitle>
         <div :style="{ color: gColors.textColor }">keywords</div>
         <v-divider class="pb-2"></v-divider>
         <v-chip
-          v-for="(keyword, i) of dream.keywords"
-          :key="i"
+          v-for="(keyword, index) of dream.keywords"
+          :key="index"
           class="ma-1"
           :close="edit"
           :style="{ color: gColors.textColor }"
@@ -242,56 +258,67 @@ onMounted(async () => {
           :color="gColors.textColor"
           @click:append="addChip(keywords)"
           @keyup.enter="addChip(keywords)"
-          outlined
-          rounded
-          dense
         ></v-text-field>
       </v-card-subtitle>
     </v-card>
 
-    <v-bottom-sheet
-      v-if="editSheet"
-      v-model="editSheet"
-      max-width="800"
-      scrollable
-      inset
-    >
-      <v-card :color="gColors.backgroundColor">
-        <v-row align="center" justify="center" no-gutters>
-          <v-col cols="6">
-            <v-card-title>Edit Dream {{ selectedSubIndex + 1 }}</v-card-title>
-          </v-col>
-          <v-col cols="6">
-            <v-btn
-              @click="tapDelete = true"
-              class="float-right"
-              color="red darken-2"
-              text
+    <v-slide-y-reverse-transition>
+      <v-sheet
+        v-if="editSheet"
+        v-model="editSheet"
+        :style="{ bottom: mobile ? '55px' : '0' }"
+        max-width="800"
+        min-width="100%"
+        position="fixed"
+        location="bottom center"
+      >
+        <v-card :color="gColors.topBarColor" variant="flat">
+          <v-row align="center" justify="center">
+            <v-col cols="6">
+              <v-card-title>Edit Dream {{ selectedSubIndex + 1 }}</v-card-title>
+            </v-col>
+            <v-col cols="6">
+              <v-row class="d-flex justify-end">
+                <v-btn
+                  @click="tapDelete = true"
+                  class="float-right"
+                  color="transparent"
+                  :flat="true"
+                >
+                  <v-icon color="red darken-2">mdi-trash-can</v-icon>
+                </v-btn>
+                <v-btn
+                  @click="editSheet = false"
+                  class="float-right"
+                  color="transparent"
+                  :flat="true"
+                >
+                  <v-icon color="orange darken-2">mdi-window-close</v-icon>
+                </v-btn>
+              </v-row>
+            </v-col>
+          </v-row>
+          <v-container>
+            <v-textarea
+              ref="subDream"
+              v-model="selectedSubDream.subDream"
+              rows="6"
             >
-              Delete
+              {{ selectedSubDream.subDream }}
+            </v-textarea>
+            <v-text-field v-model="selectedSubDream.time"></v-text-field>
+            <v-btn
+              @click="updateSubDream"
+              :color="gColors.completeBtnColor"
+              :block="true"
+            >
+              Submit
             </v-btn>
-          </v-col>
-        </v-row>
-        <v-container>
-          <v-textarea
-            ref="subDream"
-            v-model="selectedSubDream.subDream"
-            rows="6"
-            outlined
-          >
-            {{ selectedSubDream.subDream }}
-          </v-textarea>
-          <v-text-field v-model="selectedSubDream.time"></v-text-field>
-          <v-btn
-            @click="updateSubDream"
-            :color="gColors.completeBtnColor"
-            block
-          >
-            Submit
-          </v-btn>
-        </v-container>
-      </v-card>
-    </v-bottom-sheet>
+          </v-container>
+        </v-card>
+      </v-sheet>
+    </v-slide-y-reverse-transition>
+
     <v-dialog v-model="tapDelete" max-width="300">
       <v-card :color="gColors.topBarColor">
         <v-card-title>Delete</v-card-title>

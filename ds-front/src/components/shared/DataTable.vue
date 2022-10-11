@@ -6,6 +6,7 @@ const props = defineProps<{
   headers: Record<string, any>[];
   items: Record<string, any>[];
   itemsPerPage: number;
+  bgColor: string;
 }>();
 // eslint-disable-next-line no-undef
 defineEmits(["click:row"]);
@@ -29,7 +30,7 @@ onBeforeMount(() => {
 
 <template>
   <v-container class="mx-0 pa-0">
-    <v-table>
+    <v-table :style="{ backgroundColor: bgColor }">
       <slot name="search"></slot>
       <thead>
         <tr v-for="(header, index) in props.headers" :key="index">
