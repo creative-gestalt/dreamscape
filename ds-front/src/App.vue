@@ -26,7 +26,6 @@ onMounted(async () => {
   });
   await getDreamDates();
   await getAllSessions();
-  console.log(process.env.VITE_SERVER_ADDRESS);
 });
 </script>
 
