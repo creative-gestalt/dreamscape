@@ -5,10 +5,14 @@ import { storeToRefs } from "pinia";
 
 // stores
 const mainStore = useMainStore();
-const { settings } = storeToRefs(mainStore);
+const { settings } = mainStore;
 const { reset, updateSettings } = mainStore;
 // data
 const selectedColorButton = ref("topBarColor");
+
+// function updateAllSettings(value: any): void {
+//   settings.colors[selectedColorButton] = value;
+// }
 </script>
 
 <template>

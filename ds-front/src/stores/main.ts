@@ -49,6 +49,7 @@ export const useMainStore = defineStore(
           await axios.post(`${server.baseURL}/createSettings`, settings)
         ).data;
       } else {
+        console.log(settings);
         settings = (
           await axios.put(
             `${server.baseURL}/updateSettings/${settings._id}`,
