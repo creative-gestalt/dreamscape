@@ -16,7 +16,7 @@ const tab = ref(0);
 
 function handleTabs(index: number): void {
   tab.value = index;
-  dreamStore.updateCurrentTab(index);
+  dreamStore.currentTab = index;
 }
 
 onMounted(() => {

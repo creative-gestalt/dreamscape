@@ -10,7 +10,7 @@ const mainStore = useMainStore();
 const dreamStore = useDreamStore();
 const sessionStore = useSessionStore();
 const colors = mainStore.gColors;
-const { gLoading } = storeToRefs(mainStore);
+const { loading } = storeToRefs(mainStore);
 const { getSettings } = mainStore;
 const { getDreamsForPage, getDreamDates } = dreamStore;
 const { getAllSessions } = sessionStore;
@@ -26,6 +26,7 @@ onMounted(async () => {
   });
   await getDreamDates();
   await getAllSessions();
+  console.log(process.env.VUE_APP_SERVER_ADDRESS);
 });
 </script>
 
@@ -62,7 +63,7 @@ onMounted(async () => {
 
     <v-main>
       <v-overlay
-        :model-value="gLoading"
+        :model-value="loading"
         class="ma-auto align-center justify-center ios-overlay"
         contained
       >

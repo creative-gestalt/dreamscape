@@ -10,7 +10,6 @@ const path = require("path");
 export default defineConfig({
   build: {
     manifest: true,
-    minify: false,
   },
   plugins: [
     vue(),

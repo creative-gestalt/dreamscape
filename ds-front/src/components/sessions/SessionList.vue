@@ -2,12 +2,13 @@
 import { useMainStore } from "@/stores/main";
 import { useSessionStore } from "@/stores/sessions";
 import { storeToRefs } from "pinia";
+import { onMounted } from "vue";
 
 // stores
 const mainStore = useMainStore();
 const sessionStore = useSessionStore();
 const colors = mainStore.gColors;
-const { gSessions /*gLimit*/ } = storeToRefs(sessionStore);
+const { sessions } = storeToRefs(sessionStore);
 // const { loadMoreSessions } = sessionStore;
 // data
 // const pageLoaded = ref(0);
@@ -33,17 +34,21 @@ function formatSessionDate(date: string): string {
     year: "numeric",
   });
 }
+
+onMounted(() => {
+  console.log(sessions.value);
+});
 </script>
 
 <template>
   <v-card
-    v-if="gSessions && gSessions.length > 0"
+    v-if="sessions && sessions.length > 0"
     class="ma-2 ma-auto"
     max-width="800"
     :color="colors.topBarColor"
   >
     <v-list class="overflow-y-auto" :bg-color="colors.topBarColor">
-      <template v-for="(session, index) of gSessions" :key="index">
+      <template v-for="(session, index) of sessions" :key="index">
         <v-list-item
           :title="formatSessionDate(session.date)"
           :to="{ name: 'ViewSessionPage', params: { id: session._id } }"
@@ -56,14 +61,12 @@ function formatSessionDate(date: string): string {
           <v-lazy
             min-width="100%"
             max-width="100%"
-            :options="{
-              threshold: 0.5,
-            }"
+            :options="{ threshold: 0.5 }"
           >
           </v-lazy>
         </v-list-item>
         <v-divider
-          v-if="index < gSessions.length - 1"
+          v-if="index < sessions.length - 1"
           :key="index"
           class="mx-2"
         ></v-divider>

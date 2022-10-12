@@ -1,9 +1,9 @@
+import { computed, reactive, ref } from "vue";
 import { defineStore } from "pinia";
 import { Settings } from "@/interfaces/settings.interface";
 import { sleep } from "@/utils/constants";
 import { server } from "@/utils/server";
 import axios from "axios";
-import { computed, reactive, ref } from "vue";
 
 export const useMainStore = defineStore(
   "main",
@@ -21,7 +21,6 @@ export const useMainStore = defineStore(
 
     const gSettings = computed(() => settings);
     const gColors = computed(() => settings.colors);
-    const gLoading = computed(() => loading.value);
 
     function gDate(): string {
       const now = new Date();
@@ -73,7 +72,6 @@ export const useMainStore = defineStore(
       loading,
       gSettings,
       gColors,
-      gLoading,
       gDate,
       reset,
       getSettings,

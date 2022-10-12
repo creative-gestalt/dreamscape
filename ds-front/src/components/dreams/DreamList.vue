@@ -16,7 +16,7 @@ const dreamStore = useDreamStore();
 const colors = mainStore.gColors;
 const { updateLoading } = mainStore;
 const { getDreamsForPage, getDreamsCount, searchDreams } = dreamStore;
-const { gDreams, dreamsCount } = storeToRefs(dreamStore);
+const { dreams, dreamsCount } = storeToRefs(dreamStore);
 // data
 const search = ref("");
 const currentPage = ref(1);
@@ -69,7 +69,7 @@ onMounted(async () => {
 <template>
   <v-card class="ma-2 ma-auto" max-width="800" :color="colors.topBarColor">
     <DataTable
-      :items="gDreams"
+      :items="dreams"
       :headers="headers"
       :items-per-page="itemsPerPage"
       @click:row="handleClick"

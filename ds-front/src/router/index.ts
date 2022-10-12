@@ -1,5 +1,10 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import DreamsPage from "../views/DreamsPage.vue";
+const SessionsPage = () => import("../views/SessionsPage.vue");
+const ViewDreamPage = () => import("../views/ViewDreamPage.vue");
+const ViewSessionPage = () => import("../views/ViewSessionPage.vue");
+const DreamOverviewPage = () => import("../views/DreamOverviewPage.vue");
+const SettingsPage = () => import("../views/SettingsPage.vue");
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -17,7 +22,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/sessions",
     name: "SessionPage",
-    component: () => import("../views/SessionsPage.vue"),
+    component: SessionsPage,
     meta: {
       title: "Sessions",
     },
@@ -25,7 +30,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/dream/:id",
     name: "ViewDreamPage",
-    component: () => import("../views/ViewDreamPage.vue"),
+    component: ViewDreamPage,
     meta: {
       title: "View Dream",
     },
@@ -33,7 +38,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/session/:id",
     name: "ViewSessionPage",
-    component: () => import("../views/ViewSessionPage.vue"),
+    component: ViewSessionPage,
     meta: {
       title: "View Session",
     },
@@ -41,7 +46,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/dream-overview",
     name: "DreamOverviewPage",
-    component: () => import("../views/DreamOverviewPage.vue"),
+    component: DreamOverviewPage,
     meta: {
       title: "Overview",
     },
@@ -49,7 +54,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/settings",
     name: "SettingsPage",
-    component: () => import("../views/SettingsPage.vue"),
+    component: SettingsPage,
     meta: {
       title: "Settings",
     },

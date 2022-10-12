@@ -16,7 +16,7 @@ const tab = ref(0);
 
 function handleTabs(index: number): void {
   tab.value = index;
-  sessionStore.updateCurrentTab(index);
+  sessionStore.currentTab = index;
 }
 
 onMounted(() => {
