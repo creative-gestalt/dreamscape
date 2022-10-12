@@ -3,9 +3,9 @@ import { computed, onMounted, ref } from "vue";
 import { useMainStore } from "@/stores/main";
 import { storeToRefs } from "pinia";
 import { useDreamStore } from "@/stores/dreams";
+import { DreamDate } from "@/interfaces/dream.interface";
 import { useDisplay } from "vuetify";
 import router from "@/router";
-import { DreamDate } from "@/interfaces/dream.interface";
 
 // stores
 const mainStore = useMainStore();
