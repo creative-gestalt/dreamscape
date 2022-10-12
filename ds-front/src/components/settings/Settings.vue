@@ -15,26 +15,80 @@ const selectedColorButton = ref("topBarColor");
   <v-container>
     <v-card>
       <v-btn-toggle v-model="selectedColorButton" class="d-flex">
-        <v-btn class="flex-grow-1" value="topBarColor" variant="tonal">
-          <v-icon :color="settings.colors.topBarColor">
-            mdi-format-line-weight
-          </v-icon>
+        <v-btn
+          class="flex-grow-1"
+          value="topBarColor"
+          variant="tonal"
+          :stacked="true"
+        >
+          <v-badge
+            :floating="true"
+            location="center"
+            :color="settings.colors.topBarColor"
+            :bordered="true"
+            :dot="true"
+          ></v-badge>
+          <v-icon class="mt-1"> mdi-format-line-weight </v-icon>
         </v-btn>
-        <v-btn class="flex-grow-1" value="backgroundColor" variant="tonal">
-          <v-icon :color="settings.colors.backgroundColor">
-            mdi-application
-          </v-icon>
+        <v-btn
+          class="flex-grow-1"
+          value="backgroundColor"
+          variant="tonal"
+          :stacked="true"
+        >
+          <v-badge
+            :floating="true"
+            location="center"
+            :color="settings.colors.backgroundColor"
+            :bordered="true"
+            :dot="true"
+          ></v-badge>
+          <v-icon class="mt-1"> mdi-application </v-icon>
         </v-btn>
-        <v-btn class="flex-grow-1" value="iconColor" variant="tonal">
-          <v-icon :color="settings.colors.iconColor">mdi-pill</v-icon>
+        <v-btn
+          class="flex-grow-1"
+          value="iconColor"
+          variant="tonal"
+          :stacked="true"
+        >
+          <v-badge
+            :floating="true"
+            location="center"
+            :color="settings.colors.iconColor"
+            :bordered="true"
+            :dot="true"
+          ></v-badge>
+          <v-icon class="mt-1">mdi-pill</v-icon>
         </v-btn>
-        <v-btn class="flex-grow-1" value="textColor" variant="tonal">
-          <v-icon :color="settings.colors.textColor">mdi-text-shadow</v-icon>
+        <v-btn
+          class="flex-grow-1"
+          value="textColor"
+          variant="tonal"
+          :stacked="true"
+        >
+          <v-badge
+            :floating="true"
+            location="center"
+            :color="settings.colors.textColor"
+            :bordered="true"
+            :dot="true"
+          ></v-badge>
+          <v-icon class="mt-1">mdi-text-shadow</v-icon>
         </v-btn>
-        <v-btn class="flex-grow-1" value="completeBtnColor" variant="tonal">
-          <v-icon :color="settings.colors.completeBtnColor">
-            mdi-gesture-tap
-          </v-icon>
+        <v-btn
+          class="flex-grow-1"
+          value="completeBtnColor"
+          variant="tonal"
+          :stacked="true"
+        >
+          <v-badge
+            :floating="true"
+            location="center"
+            :color="settings.colors.completeBtnColor"
+            :bordered="true"
+            :dot="true"
+          ></v-badge>
+          <v-icon class="mt-1"> mdi-gesture-tap </v-icon>
         </v-btn>
       </v-btn-toggle>
       <v-color-picker

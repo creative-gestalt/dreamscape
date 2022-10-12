@@ -163,10 +163,7 @@ onMounted(() => {
                 :max-date="max"
                 min-date="1950-01-01"
                 :popover="{ visibility: 'click' }"
-                :style="{
-                  backgroundColor: gColors.backgroundColor,
-                  borderRadius: '10px',
-                }"
+                :style="{ borderRadius: '10px' }"
                 is-dark
               >
                 <template v-slot="{ inputEvents }">
