@@ -34,10 +34,6 @@ function formatSessionDate(date: string): string {
     year: "numeric",
   });
 }
-
-onMounted(() => {
-  console.log(sessions.value);
-});
 </script>
 
 <template>

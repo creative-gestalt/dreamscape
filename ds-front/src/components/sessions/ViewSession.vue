@@ -59,7 +59,6 @@ async function deleteSession(): Promise<void> {
   await router.push("/sessions");
 }
 onBeforeMount(async () => {
-  console.log(route);
   id.value = String(route.params.id);
   session.value = await getSession({ _id: id.value } as Session);
   sessionTime.value = session.value.date.slice(11, 19);
