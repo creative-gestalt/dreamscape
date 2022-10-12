@@ -19,7 +19,6 @@ export const useMainStore = defineStore(
     } as Settings);
     const loading = ref(false);
 
-    const gSettings = computed(() => settings);
     const gColors = computed(() => settings.colors);
 
     function gDate(): string {
@@ -70,7 +69,6 @@ export const useMainStore = defineStore(
     return {
       settings,
       loading,
-      gSettings,
       gColors,
       gDate,
       reset,

@@ -93,7 +93,8 @@ const selectedColorButton = ref("topBarColor");
       </v-btn-toggle>
       <v-color-picker
         v-model="settings.colors[selectedColorButton]"
-        @update:color="updateSettings"
+        :show-swatches="true"
+        @update:modelValue="updateSettings"
       ></v-color-picker>
     </v-card>
     <v-card class="ma-auto" color="transparent" max-width="500">
