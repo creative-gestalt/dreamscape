@@ -13,7 +13,7 @@ const selectedColorButton = ref("topBarColor");
 
 <template>
   <v-container>
-    <v-card>
+    <v-card max-width="500">
       <v-btn-toggle v-model="selectedColorButton" class="d-flex">
         <v-btn
           class="flex-grow-1"
