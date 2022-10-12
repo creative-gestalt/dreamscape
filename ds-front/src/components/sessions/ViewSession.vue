@@ -18,7 +18,7 @@ const { gDate } = mainStore;
 const { getSession, updateSession, getAllSessions, deleteSessions } =
   sessionStore;
 // data
-const mobile = useDisplay().xs;
+const mobile = useDisplay().xs.value;
 const id = ref("");
 const session = ref({} as Session);
 const sessionTime = ref("");

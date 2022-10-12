@@ -16,7 +16,7 @@ const colors = mainStore.gColors;
 const { gDate } = mainStore;
 const { getDream, updateDream, getDreamsForPage, deleteDreams } = dreamStore;
 // data
-const mobile = useDisplay().xs;
+const mobile = useDisplay().xs.value;
 const id = ref("");
 const dream = ref({} as Dream);
 const dreamTime = ref("");

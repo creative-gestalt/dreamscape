@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve-build": "vite build --debug && vite preview",
+    "serve-build": "vite build && vite preview",
     "serve-build-host": "vite build && vite preview --host",
     "build": "vite build",
     "lint": "vue-cli-service lint",

@@ -4,18 +4,18 @@ import { useDisplay } from "vuetify";
 import { onMounted, ref } from "vue";
 import { useDreamStore } from "@/stores/dreams";
 import { useSessionStore } from "@/stores/sessions";
-// import { storeToRefs } from "pinia";
+import { storeToRefs } from "pinia";
 
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
 const sessionStore = useSessionStore();
 const colors = mainStore.gColors;
-const loading = mainStore.gLoading;
+const { gLoading } = storeToRefs(mainStore);
 const { getSettings } = mainStore;
 const { getDreamsForPage, getDreamDates } = dreamStore;
 const { getAllSessions } = sessionStore;
 
-const mobile = useDisplay().xs;
+const mobile = useDisplay().xs.value;
 const selectedNav = ref("0");
 
 onMounted(async () => {
@@ -62,7 +62,7 @@ onMounted(async () => {
 
     <v-main>
       <v-overlay
-        :model-value="loading"
+        :model-value="gLoading"
         class="ma-auto align-center justify-center ios-overlay"
         contained
       >

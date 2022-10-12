@@ -10,7 +10,7 @@ import SessionList from "@/components/sessions/SessionList.vue";
 const mainStore = useMainStore();
 const sessionStore = useSessionStore();
 const { gColors } = storeToRefs(mainStore);
-const mobile = useDisplay().xs;
+const mobile = useDisplay().xs.value;
 const show = ref(false);
 const tab = ref(0);
 

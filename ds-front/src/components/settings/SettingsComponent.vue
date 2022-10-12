@@ -13,7 +13,7 @@ const selectedColorButton = ref("topBarColor");
 
 <template>
   <v-container>
-    <v-card max-width="500">
+    <v-card class="ma-auto" max-width="500">
       <v-btn-toggle v-model="selectedColorButton" class="d-flex">
         <v-btn
           class="flex-grow-1"
@@ -96,18 +96,15 @@ const selectedColorButton = ref("topBarColor");
         @update:color="updateSettings"
       ></v-color-picker>
     </v-card>
-    <v-divider class="mt-5"></v-divider>
-    <v-row>
-      <v-col>
-        <v-btn
-          @click="reset"
-          class="mt-5"
-          :color="settings.colors.completeBtnColor"
-          :block="true"
-        >
-          Reset
-        </v-btn>
-      </v-col>
-    </v-row>
+    <v-card class="ma-auto" color="transparent" max-width="500">
+      <v-btn
+        @click="reset"
+        class="mt-5"
+        :color="settings.colors.completeBtnColor"
+        :block="true"
+      >
+        Reset
+      </v-btn>
+    </v-card>
   </v-container>
 </template>

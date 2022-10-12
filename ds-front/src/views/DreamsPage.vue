@@ -10,7 +10,7 @@ import { storeToRefs } from "pinia";
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
 const { gColors } = storeToRefs(mainStore);
-const mobile = useDisplay().xs;
+const mobile = useDisplay().xs.value;
 const show = ref(false);
 const tab = ref(0);
 

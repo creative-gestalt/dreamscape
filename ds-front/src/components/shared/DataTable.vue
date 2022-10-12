@@ -12,13 +12,17 @@ const props = defineProps<{
 defineEmits(["click:row"]);
 
 const show = ref(false);
-const items = computed(() => [...props.items].splice(0, props.itemsPerPage));
+const items = computed(() =>
+  props.items.length > 0 ? [...props.items].splice(0, props.itemsPerPage) : []
+);
 
 function check(): void {
-  const keys = Object.keys(props.items[0]);
-  for (let i = 0; i < props.headers.length; i++) {
-    if (keys.includes(props.headers[i].name.toLowerCase())) {
-      show.value = true;
+  if (items.value.length > 0) {
+    const keys = Object.keys(props.items[0]);
+    for (let i = 0; i < props.headers.length; i++) {
+      if (keys.includes(props.headers[i].name.toLowerCase())) {
+        show.value = true;
+      }
     }
   }
 }
@@ -29,7 +33,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <v-container class="mx-0 pa-0">
+  <v-container v-if="items.length > 0" class="mx-0 pa-0">
     <v-table :style="{ backgroundColor: bgColor }">
       <slot name="search"></slot>
       <thead>
