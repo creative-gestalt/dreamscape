@@ -1,9 +1,4 @@
-import {
-  createRouter,
-  createWebHashHistory,
-  createWebHistory,
-  RouteRecordRaw,
-} from "vue-router";
+import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import DreamsPage from "../views/DreamsPage.vue";
 
 const routes: Array<RouteRecordRaw> = [
@@ -22,8 +17,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/sessions",
     name: "SessionPage",
-    component: () =>
-      import(/* webpackChunkName: "sessions" */ "../views/SessionsPage.vue"),
+    component: () => import("../views/SessionsPage.vue"),
     meta: {
       title: "Sessions",
     },
@@ -31,8 +25,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/dream/:id",
     name: "ViewDreamPage",
-    component: () =>
-      import(/* webpackChunkName: "view-dream" */ "../views/ViewDreamPage.vue"),
+    component: () => import("../views/ViewDreamPage.vue"),
     meta: {
       title: "View Dream",
     },
@@ -40,10 +33,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/session/:id",
     name: "ViewSessionPage",
-    component: () =>
-      import(
-        /* webpackChunkName: "view-session" */ "../views/ViewSessionPage.vue"
-      ),
+    component: () => import("../views/ViewSessionPage.vue"),
     meta: {
       title: "View Session",
     },
@@ -51,10 +41,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/dream-overview",
     name: "DreamOverviewPage",
-    component: () =>
-      import(
-        /* webpackChunkName: "overview" */ "../views/DreamOverviewPage.vue"
-      ),
+    component: () => import("../views/DreamOverviewPage.vue"),
     meta: {
       title: "Overview",
     },
@@ -62,8 +49,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/settings",
     name: "SettingsPage",
-    component: () =>
-      import(/* webpackChunkName: "settings" */ "../views/SettingsPage.vue"),
+    component: () => import("../views/SettingsPage.vue"),
     meta: {
       title: "Settings",
     },

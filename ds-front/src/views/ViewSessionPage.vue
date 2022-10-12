@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
 import ViewSession from "@/components/sessions/ViewSession.vue";
+
 const show = ref(false);
 
 onMounted(() => {

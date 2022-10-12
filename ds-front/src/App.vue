@@ -1,15 +1,16 @@
 <script lang="ts" setup>
 import { useMainStore } from "@/stores/main";
 import { useDisplay } from "vuetify";
-import { ref, onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { useDreamStore } from "@/stores/dreams";
 import { useSessionStore } from "@/stores/sessions";
-import { storeToRefs } from "pinia";
+// import { storeToRefs } from "pinia";
 
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
 const sessionStore = useSessionStore();
-const { gLoading, gColors } = storeToRefs(mainStore);
+const colors = mainStore.gColors;
+const loading = mainStore.gLoading;
 const { getSettings } = mainStore;
 const { getDreamsForPage, getDreamDates } = dreamStore;
 const { getAllSessions } = sessionStore;
@@ -29,16 +30,14 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-app id="app" :style="{ background: gColors.backgroundColor }">
-    <v-app-bar :color="gColors.topBarColor" dark app>
+  <v-app id="app" :style="{ background: colors.backgroundColor }">
+    <v-app-bar :color="colors.topBarColor" dark app>
       <div class="d-flex align-center pr-5">
         <v-img class="ml-3" width="35" src="./assets/ga-logo-black.png"></v-img>
       </div>
       <v-app-bar-title
         class="text-no-wrap"
-        :style="{
-          color: gColors.iconColor,
-        }"
+        :style="{ color: colors.iconColor }"
       >
         {{ $route.meta.title }}
       </v-app-bar-title>
@@ -47,28 +46,28 @@ onMounted(async () => {
 
       <div v-if="!mobile">
         <v-btn to="/dreams" variant="text">
-          <v-icon :color="gColors.iconColor"> mdi-sleep </v-icon>
+          <v-icon :color="colors.iconColor"> mdi-sleep </v-icon>
         </v-btn>
         <v-btn to="/sessions" variant="text">
-          <v-icon :color="gColors.iconColor"> mdi-notebook </v-icon>
+          <v-icon :color="colors.iconColor"> mdi-notebook </v-icon>
         </v-btn>
         <v-btn to="/dream-overview" variant="text">
-          <v-icon :color="gColors.iconColor">mdi-calendar</v-icon>
+          <v-icon :color="colors.iconColor">mdi-calendar</v-icon>
         </v-btn>
         <v-btn to="/settings" variant="text">
-          <v-icon :color="gColors.iconColor"> mdi-cog-outline </v-icon>
+          <v-icon :color="colors.iconColor"> mdi-cog-outline </v-icon>
         </v-btn>
       </div>
     </v-app-bar>
 
     <v-main>
       <v-overlay
-        :model-value="gLoading"
+        :model-value="loading"
         class="ma-auto align-center justify-center ios-overlay"
         contained
       >
         <v-progress-circular
-          :color="gColors.textColor"
+          :color="colors.textColor"
           size="45"
           indeterminate
         ></v-progress-circular>
@@ -79,26 +78,26 @@ onMounted(async () => {
     <v-bottom-navigation
       v-if="mobile"
       :model-value="selectedNav"
-      :bg-color="gColors.topBarColor"
+      :bg-color="colors.topBarColor"
       :grow="true"
       mode="shift"
       app
     >
-      <v-btn :color="gColors.topBarColor" value="0" to="/dreams">
-        <span :style="{ color: gColors.iconColor }"> Dreams </span>
-        <v-icon :color="gColors.iconColor">mdi-sleep</v-icon>
+      <v-btn :color="colors.topBarColor" value="0" to="/dreams">
+        <span :style="{ color: colors.iconColor }"> Dreams </span>
+        <v-icon :color="colors.iconColor">mdi-sleep</v-icon>
       </v-btn>
-      <v-btn :color="gColors.topBarColor" value="1" to="/sessions">
-        <span :style="{ color: gColors.iconColor }"> Sessions </span>
-        <v-icon :color="gColors.iconColor"> mdi-notebook </v-icon>
+      <v-btn :color="colors.topBarColor" value="1" to="/sessions">
+        <span :style="{ color: colors.iconColor }"> Sessions </span>
+        <v-icon :color="colors.iconColor"> mdi-notebook </v-icon>
       </v-btn>
-      <v-btn :color="gColors.topBarColor" value="2" to="/dream-overview">
-        <span :style="{ color: gColors.iconColor }"> Overview </span>
-        <v-icon :color="gColors.iconColor"> mdi-calendar </v-icon>
+      <v-btn :color="colors.topBarColor" value="2" to="/dream-overview">
+        <span :style="{ color: colors.iconColor }"> Overview </span>
+        <v-icon :color="colors.iconColor"> mdi-calendar </v-icon>
       </v-btn>
-      <v-btn :color="gColors.topBarColor" value="3" to="/settings">
-        <span :style="{ color: gColors.iconColor }"> Settings </span>
-        <v-icon :color="gColors.iconColor"> mdi-cog-outline </v-icon>
+      <v-btn :color="colors.topBarColor" value="3" to="/settings">
+        <span :style="{ color: colors.iconColor }"> Settings </span>
+        <v-icon :color="colors.iconColor"> mdi-cog-outline </v-icon>
       </v-btn>
     </v-bottom-navigation>
   </v-app>

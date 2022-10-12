@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
 import ViewDream from "@/components/dreams/ViewDream.vue";
+
 const show = ref(false);
 
 onMounted(() => {

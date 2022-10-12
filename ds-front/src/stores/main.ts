@@ -3,12 +3,12 @@ import { Settings } from "@/interfaces/settings.interface";
 import { sleep } from "@/utils/constants";
 import { server } from "@/utils/server";
 import axios from "axios";
-import { computed, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 
 export const useMainStore = defineStore(
   "main",
   () => {
-    const settings = ref({
+    let settings = reactive({
       colors: {
         topBarColor: "#333333",
         backgroundColor: "#111111",
@@ -19,8 +19,8 @@ export const useMainStore = defineStore(
     } as Settings);
     const loading = ref(false);
 
-    const gSettings = computed(() => settings.value);
-    const gColors = computed(() => settings.value.colors);
+    const gSettings = computed(() => settings);
+    const gColors = computed(() => settings.colors);
     const gLoading = computed(() => loading.value);
 
     function gDate(): string {
@@ -30,8 +30,8 @@ export const useMainStore = defineStore(
       return dateLocal.toISOString();
     }
     async function reset(): Promise<void> {
-      settings.value = {
-        _id: settings.value._id,
+      settings = {
+        _id: settings._id,
         colors: {
           topBarColor: "#333333",
           backgroundColor: "#111111",
@@ -43,18 +43,18 @@ export const useMainStore = defineStore(
     }
     async function getSettings(): Promise<void> {
       const result = (await axios.get(`${server.baseURL}/getSettings`)).data;
-      if (result) settings.value = result;
+      if (result) settings = result;
     }
     async function updateSettings(): Promise<void> {
-      if (!settings.value._id) {
-        settings.value = (
-          await axios.post(`${server.baseURL}/createSettings`, settings.value)
+      if (!settings._id) {
+        settings = (
+          await axios.post(`${server.baseURL}/createSettings`, settings)
         ).data;
       } else {
-        settings.value = (
+        settings = (
           await axios.put(
-            `${server.baseURL}/updateSettings/${settings.value._id}`,
-            settings.value
+            `${server.baseURL}/updateSettings/${settings._id}`,
+            settings
           )
         ).data;
       }

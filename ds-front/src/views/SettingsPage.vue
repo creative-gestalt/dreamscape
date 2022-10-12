@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
 import SettingsComponent from "@/components/settings/Settings.vue";
+
 const show = ref(false);
 
 onMounted(() => {

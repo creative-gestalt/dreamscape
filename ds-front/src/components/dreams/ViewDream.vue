@@ -3,14 +3,16 @@ import { computed, onBeforeMount, ref } from "vue";
 import { useMainStore } from "@/stores/main";
 import { useDreamStore } from "@/stores/dreams";
 import { Dream, SubDream } from "@/interfaces/dream.interface";
-import { storeToRefs } from "pinia";
 import { useDisplay } from "vuetify";
-import router from "@/router";
+import { useRoute, useRouter } from "vue-router";
 
+// router
+const router = useRouter();
+const route = useRoute();
 //stores
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
-const { gColors } = storeToRefs(mainStore);
+const colors = mainStore.gColors;
 const { gDate } = mainStore;
 const { getDream, updateDream, getDreamsForPage, deleteDreams } = dreamStore;
 // data
@@ -32,7 +34,6 @@ const time = ref(
     hour12: true,
   })
 );
-
 // computed
 const computedDay = computed(() =>
   dream.value.date
@@ -108,7 +109,7 @@ async function deleteDream(): Promise<void> {
 }
 
 onBeforeMount(async () => {
-  id.value = String(router.currentRoute.value.params.id);
+  id.value = String(route.params.id);
   dream.value = await getDream({ _id: id.value } as Dream);
   dreamTime.value = dream.value.date.slice(11, 19);
   max.value = gDate();
@@ -120,7 +121,7 @@ onBeforeMount(async () => {
     <v-btn
       v-if="edit"
       @click="addSubDream"
-      :color="gColors.completeBtnColor"
+      :color="colors.completeBtnColor"
       position="fixed"
       location="bottom right"
       rounded
@@ -129,7 +130,7 @@ onBeforeMount(async () => {
     </v-btn>
     <v-card
       class="ma-auto mb-16"
-      :color="gColors.topBarColor"
+      :color="colors.topBarColor"
       max-width="800"
       variant="outlined"
       :style="{ minHeight: '75vh' }"
@@ -142,13 +143,16 @@ onBeforeMount(async () => {
               :max-date="max"
               min-date="1950-01-01"
               :popover="{ visibility: 'click' }"
-              :style="{ borderRadius: '10px' }"
+              :style="{
+                backgroundColor: colors.backgroundColor,
+                borderRadius: '10px',
+              }"
               is-dark
             >
               <template v-slot="{ inputEvents }">
                 <v-btn
                   v-on="inputEvents"
-                  :style="{ color: gColors.topBarColor }"
+                  :style="{ color: colors.topBarColor }"
                   variant="outlined"
                   :block="true"
                 >
@@ -171,18 +175,18 @@ onBeforeMount(async () => {
                 v-else
                 class="mr-3"
                 @click="edit = true"
-                :color="gColors.iconColor"
+                :color="colors.iconColor"
               >
                 mdi-pencil
               </v-icon>
             </v-fade-transition>
             <v-menu min-width="175" offset-x left>
               <template #activator="{ props }">
-                <v-icon v-bind="props" :color="gColors.iconColor">
+                <v-icon v-bind="props" :color="colors.iconColor">
                   mdi-menu
                 </v-icon>
               </template>
-              <v-list :color="gColors.backgroundColor">
+              <v-list :color="colors.backgroundColor">
                 <v-list-item link>
                   <v-list-item-title @click="deleteDream" style="color: red">
                     Delete
@@ -198,14 +202,14 @@ onBeforeMount(async () => {
           v-for="(dream, index) of dream.dreams"
           :key="index"
           class="py-4 my-5"
-          :color="gColors.topBarColor"
+          :color="colors.topBarColor"
           variant="outlined"
         >
           <v-row align="center" justify="center">
             <v-col cols="8">
               <v-card-subtitle
                 class="text-left pb-3"
-                :style="{ color: gColors.textColor }"
+                :style="{ color: colors.textColor }"
               >
                 Dream {{ index + 1 }} -
                 {{ dream.time ? dream.time : "No Time Set" }}
@@ -227,21 +231,21 @@ onBeforeMount(async () => {
           </v-row>
           <v-card-subtitle
             class="text-left text-wrap"
-            :style="{ color: gColors.textColor }"
+            :style="{ color: colors.textColor }"
           >
             {{ dream.subDream }}
           </v-card-subtitle>
         </v-card>
       </v-container>
       <v-card-subtitle>
-        <div :style="{ color: gColors.textColor }">keywords</div>
+        <div :style="{ color: colors.textColor }">keywords</div>
         <v-divider class="pb-2"></v-divider>
         <v-chip
           v-for="(keyword, index) of dream.keywords"
           :key="index"
           class="ma-1"
           :close="edit"
-          :style="{ color: gColors.textColor }"
+          :style="{ color: colors.textColor }"
           @click:close="removeKeyword(keyword)"
           outlined
         >
@@ -253,7 +257,7 @@ onBeforeMount(async () => {
           v-model="keywords"
           label="Keywords"
           append-icon="mdi-check"
-          :color="gColors.textColor"
+          :color="colors.textColor"
           @click:append="addChip(keywords)"
           @keyup.enter="addChip(keywords)"
         ></v-text-field>
@@ -270,7 +274,7 @@ onBeforeMount(async () => {
         position="fixed"
         location="bottom center"
       >
-        <v-card :color="gColors.topBarColor" variant="flat">
+        <v-card :color="colors.topBarColor" variant="flat">
           <v-row align="center" justify="center">
             <v-col cols="6">
               <v-card-title>Edit Dream {{ selectedSubIndex + 1 }}</v-card-title>
@@ -307,7 +311,7 @@ onBeforeMount(async () => {
             <v-text-field v-model="selectedSubDream.time"></v-text-field>
             <v-btn
               @click="updateSubDream"
-              :color="gColors.completeBtnColor"
+              :color="colors.completeBtnColor"
               :block="true"
             >
               Submit
@@ -318,7 +322,7 @@ onBeforeMount(async () => {
     </v-slide-y-reverse-transition>
 
     <v-dialog v-model="tapDelete" max-width="300">
-      <v-card :color="gColors.topBarColor">
+      <v-card :color="colors.topBarColor">
         <v-card-title>Delete</v-card-title>
         <v-card-subtitle>Are you sure?</v-card-subtitle>
         <v-card-actions>
@@ -326,8 +330,8 @@ onBeforeMount(async () => {
           <v-btn @click="tapDelete = false">Cancel</v-btn>
           <v-btn
             @click="deleteSubDream"
-            :style="{ color: gColors.textColor }"
-            :color="gColors.completeBtnColor"
+            :style="{ color: colors.textColor }"
+            :color="colors.completeBtnColor"
           >
             Delete
           </v-btn>

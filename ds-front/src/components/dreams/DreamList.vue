@@ -1,20 +1,23 @@
 <script lang="ts" setup>
 import DataTable from "@/components/shared/DataTable.vue";
-import router from "@/router";
 import { useMainStore } from "@/stores/main";
 import { useDreamStore } from "@/stores/dreams";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import { Dream } from "@/interfaces/dream.interface";
 import { sleep } from "@/utils/constants";
+import { useRouter } from "vue-router";
+
+// router
+const router = useRouter();
 // stores
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
-// data
-const { gColors } = storeToRefs(mainStore);
-const { gDreams, dreamsCount } = storeToRefs(dreamStore);
+const colors = mainStore.gColors;
 const { updateLoading } = mainStore;
 const { getDreamsForPage, getDreamsCount, searchDreams } = dreamStore;
+const { gDreams, dreamsCount } = storeToRefs(dreamStore);
+// data
 const search = ref("");
 const currentPage = ref(1);
 const itemsPerPage = ref(8);
@@ -24,6 +27,7 @@ const headers = [{ name: "Date", visible: false }];
 const compPages = computed(() =>
   Math.ceil(dreamsCount.value / itemsPerPage.value)
 );
+// watcher
 watch(search, async (newSearch) => {
   if (newSearch) {
     await searchDreams(newSearch);
@@ -63,13 +67,13 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-card class="ma-2 ma-auto" max-width="800" :color="gColors.topBarColor">
+  <v-card class="ma-2 ma-auto" max-width="800" :color="colors.topBarColor">
     <DataTable
       :items="gDreams"
       :headers="headers"
       :items-per-page="itemsPerPage"
       @click:row="handleClick"
-      :bg-color="gColors.topBarColor"
+      :bg-color="colors.topBarColor"
     >
       <template #search>
         <v-row class="pa-4">
@@ -96,20 +100,20 @@ onMounted(async () => {
         </v-row>
       </template>
       <template #item="{ item }">
-        <div :style="{ color: gColors.textColor }">
+        <div :style="{ color: colors.textColor }">
           <v-list-item class="px-0" density="compact" link>
             <template #prepend>
               <v-avatar class="mx-0 ml-n3">{{ item.dreams.length }}</v-avatar>
             </template>
             <template #title>
-              <span :style="{ color: gColors.textColor }">
+              <span :style="{ color: colors.textColor }">
                 {{ formatDreamDate(item.date) }}
               </span>
             </template>
             <template #subtitle>
               <span
                 class="single-line__text"
-                :style="{ color: gColors.textColor }"
+                :style="{ color: colors.textColor }"
               >
                 {{ item.dreams[0].subDream }}
               </span>
@@ -122,7 +126,7 @@ onMounted(async () => {
       :model-value="currentPage"
       @update:modelValue="dreamsForPage"
       :length="compPages"
-      :active-color="gColors.completeBtnColor"
+      :active-color="colors.completeBtnColor"
       density="comfortable"
       variant="elevated"
     >

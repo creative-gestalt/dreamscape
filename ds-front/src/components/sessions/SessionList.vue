@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { ref } from "vue";
 import { useMainStore } from "@/stores/main";
 import { useSessionStore } from "@/stores/sessions";
 import { storeToRefs } from "pinia";
@@ -7,10 +6,10 @@ import { storeToRefs } from "pinia";
 // stores
 const mainStore = useMainStore();
 const sessionStore = useSessionStore();
-// data
+const colors = mainStore.gColors;
 const { gSessions /*gLimit*/ } = storeToRefs(sessionStore);
 // const { loadMoreSessions } = sessionStore;
-const { gColors } = storeToRefs(mainStore);
+// data
 // const pageLoaded = ref(0);
 // const moreAvailable = ref(true);
 // computed
@@ -41,16 +40,16 @@ function formatSessionDate(date: string): string {
     v-if="gSessions && gSessions.length > 0"
     class="ma-2 ma-auto"
     max-width="800"
-    :color="gColors.topBarColor"
+    :color="colors.topBarColor"
   >
-    <v-list class="overflow-y-auto" :bg-color="gColors.topBarColor">
+    <v-list class="overflow-y-auto" :bg-color="colors.topBarColor">
       <template v-for="(session, index) of gSessions" :key="index">
         <v-list-item
           :title="formatSessionDate(session.date)"
           :to="{ name: 'ViewSessionPage', params: { id: session._id } }"
         >
           <template #subtitle>
-            <span :style="{ color: gColors.textColor }">
+            <span :style="{ color: colors.textColor }">
               {{ session.session.entity }}
             </span>
           </template>
@@ -72,8 +71,8 @@ function formatSessionDate(date: string): string {
     </v-list>
   </v-card>
   <v-container v-else>
-    <v-card :color="gColors.topBarColor">
-      <v-card-title :style="{ color: gColors.textColor }">
+    <v-card :color="colors.topBarColor">
+      <v-card-title :style="{ color: colors.textColor }">
         No Sessions Here Yet
       </v-card-title>
     </v-card>

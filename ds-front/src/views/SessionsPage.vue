@@ -3,12 +3,13 @@ import { useMainStore } from "@/stores/main";
 import { useSessionStore } from "@/stores/sessions";
 import { useDisplay } from "vuetify";
 import { onMounted, ref } from "vue";
+import { storeToRefs } from "pinia";
 import NewSession from "@/components/sessions/NewSession.vue";
 import SessionList from "@/components/sessions/SessionList.vue";
 
 const mainStore = useMainStore();
 const sessionStore = useSessionStore();
-const colors = mainStore.gColors;
+const { gColors } = storeToRefs(mainStore);
 const mobile = useDisplay().xs;
 const show = ref(false);
 const tab = ref(0);
@@ -30,8 +31,8 @@ onMounted(() => {
       <v-tabs
         :model-value="tab"
         @update:modelValue="handleTabs"
-        :color="colors.textColor"
-        :bg-color="colors.backgroundColor"
+        :color="gColors.textColor"
+        :bg-color="gColors.backgroundColor"
         :grow="mobile"
         :centered="true"
       >
