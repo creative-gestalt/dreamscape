@@ -20,7 +20,6 @@ const dream = ref({} as Dream);
 const dreamTime = ref("");
 const keywords = ref("");
 const edit = ref(false);
-const date = ref("");
 const max = ref("");
 const selectedSubIndex = ref(0);
 const selectedSubDream = ref({} as SubDream);
@@ -82,9 +81,12 @@ function addChip(value: string): void {
   submitDream();
 }
 async function submitDream(): Promise<void> {
+  const date = new Date(dream.value.date).toISOString();
+  const newDate =
+    date.slice(0, 11) + dreamTime.value + date.slice(19, date.length);
   await updateDream({
     _id: id.value,
-    date: dream.value.date + dreamTime.value,
+    date: newDate,
     dreams: dream.value.dreams,
     keywords: dream.value.keywords.length > 0 ? dream.value.keywords : [],
   });
@@ -109,7 +111,7 @@ onBeforeMount(async () => {
   id.value = String(router.currentRoute.value.params.id);
   dream.value = await getDream({ _id: id.value } as Dream);
   dreamTime.value = dream.value.date.slice(11, 19);
-  dream.value.date = dream.value.date.slice(0, 10);
+  max.value = gDate();
 });
 </script>
 
@@ -140,17 +142,13 @@ onBeforeMount(async () => {
               :max-date="max"
               min-date="1950-01-01"
               :popover="{ visibility: 'click' }"
-              :style="{
-                backgroundColor: gColors.backgroundColor,
-                borderRadius: '10px',
-              }"
+              :style="{ borderRadius: '10px' }"
               is-dark
             >
               <template v-slot="{ inputEvents }">
                 <v-btn
                   v-on="inputEvents"
-                  :color="gColors.backgroundColor"
-                  :style="{ color: gColors.textColor }"
+                  :style="{ color: gColors.topBarColor }"
                   variant="outlined"
                   :block="true"
                 >

@@ -35,7 +35,7 @@ onMounted(() => {
         :grow="mobile"
         :centered="true"
       >
-        <v-tab :value="0">New</v-tab>
+        <v-tab :value="0">new</v-tab>
         <v-tab :value="1">all</v-tab>
       </v-tabs>
 

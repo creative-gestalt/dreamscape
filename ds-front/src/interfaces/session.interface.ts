@@ -1,7 +1,7 @@
 export interface Session {
   _id?: string;
-  date?: string;
-  session?: SessionParts;
+  date: string;
+  session: SessionParts;
   user?: string;
 }
 

@@ -4,7 +4,7 @@ import router from "@/router";
 import { useMainStore } from "@/stores/main";
 import { useDreamStore } from "@/stores/dreams";
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { Dream } from "@/interfaces/dream.interface";
 import { sleep } from "@/utils/constants";
 // stores
@@ -14,7 +14,7 @@ const dreamStore = useDreamStore();
 const { gColors } = storeToRefs(mainStore);
 const { gDreams, dreamsCount } = storeToRefs(dreamStore);
 const { updateLoading } = mainStore;
-const { getDreamsForPage, getDreamsCount } = dreamStore;
+const { getDreamsForPage, getDreamsCount, searchDreams } = dreamStore;
 const search = ref("");
 const currentPage = ref(1);
 const itemsPerPage = ref(8);
@@ -24,6 +24,13 @@ const headers = [{ name: "Date", visible: false }];
 const compPages = computed(() =>
   Math.ceil(dreamsCount.value / itemsPerPage.value)
 );
+watch(search, async (newSearch) => {
+  if (newSearch) {
+    await searchDreams(newSearch);
+  } else {
+    await dreamsForPage(1);
+  }
+});
 // methods
 function handleClick(dream: Dream): void {
   router.push(`/dream/${dream._id}`);
@@ -65,31 +72,27 @@ onMounted(async () => {
       :bg-color="gColors.topBarColor"
     >
       <template #search>
-        <v-row class="pa-2">
-          <v-col class="pr-0 flex-grow-1">
-            <v-text-field
-              v-model="search"
-              append-inner-icon="mdi-magnify"
-              label="Search"
-              @click:clear="dreamsForPage(1)"
-              density="compact"
-              single-line
-              hide-details
-              clearable
-            ></v-text-field>
-          </v-col>
-          <v-col class="pl-1">
-            <v-select
-              v-model="itemsPerPage"
-              @change="dreamsForPage(1)"
-              :items="perPage"
-              class="ml-1"
-              style="max-width: 75px"
-              density="compact"
-              hide-details
-            >
-            </v-select>
-          </v-col>
+        <v-row class="pa-4">
+          <v-text-field
+            v-model="search"
+            append-inner-icon="mdi-magnify"
+            label="Search"
+            @click:clear="dreamsForPage(1)"
+            density="compact"
+            single-line
+            hide-details
+            clearable
+          ></v-text-field>
+          <v-select
+            v-model="itemsPerPage"
+            @change="dreamsForPage(1)"
+            :items="perPage"
+            class="ml-1"
+            style="max-width: 75px"
+            density="compact"
+            hide-details
+          >
+          </v-select>
         </v-row>
       </template>
       <template #item="{ item }">

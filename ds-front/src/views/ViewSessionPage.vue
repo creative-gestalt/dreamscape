@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
+import ViewSession from "@/components/sessions/ViewSession.vue";
 const show = ref(false);
 
 onMounted(() => {
@@ -8,5 +9,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-fade-transition hide-on-leave> </v-fade-transition>
+  <v-fade-transition hide-on-leave>
+    <ViewSession />
+  </v-fade-transition>
 </template>

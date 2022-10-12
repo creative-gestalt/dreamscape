@@ -10,6 +10,7 @@ export const useSessionStore = defineStore("sessions", {
     currentTab: 0,
   }),
   getters: {
+    gLimit: (state): number => state.limit,
     gSessions: (state): Session[] => state.sessions,
     gCurrentTab: (state): number => state.currentTab,
   },
