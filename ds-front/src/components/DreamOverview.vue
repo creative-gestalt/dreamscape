@@ -14,7 +14,7 @@ const mainStore = useMainStore();
 const dreamStore = useDreamStore();
 // const colors = mainStore.gColors;
 const { gDate } = mainStore;
-const { dreamDates } = storeToRefs(dreamStore);
+const { dates } = storeToRefs(dreamStore);
 // data
 const mobile = useDisplay().xs.value;
 const localDreamDates = ref([] as any[]);
@@ -27,7 +27,7 @@ function openDreamView(day: any): void {
 onMounted(() => {
   cols.value = mobile ? 1 : 4;
   year.value = gDate().slice(0, 4);
-  dreamDates.value.map((dreamDate: DreamDate) => {
+  dates.value.map((dreamDate: DreamDate) => {
     localDreamDates.value.push({
       key: dreamDate._id,
       highlight: {
@@ -53,6 +53,7 @@ onMounted(() => {
       :rows="$screens({ lg: 3 }, 1)"
       :attributes="localDreamDates"
       is-expanded
+      is-dark
     >
     </v-calendar>
   </v-container>
