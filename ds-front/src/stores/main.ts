@@ -41,21 +41,25 @@ export const useMainStore = defineStore(
     }
     async function getSettings(): Promise<void> {
       const result = (await axios.get(`${server.baseURL}/getSettings`)).data;
-      if (result) settings = result;
+      if (result) settings.colors = result.colors;
     }
     async function updateSettings(): Promise<void> {
       if (!settings._id) {
-        settings = (
+        const result = (
           await axios.post(`${server.baseURL}/createSettings`, settings)
         ).data;
+
+        settings._id = result._id;
+        settings.colors = result.colors;
       } else {
-        console.log(settings);
-        settings = (
+        const result = (
           await axios.put(
             `${server.baseURL}/updateSettings/${settings._id}`,
             settings
           )
         ).data;
+
+        settings.colors = result.colors;
       }
     }
     async function updateLoading(payload: boolean): Promise<void> {

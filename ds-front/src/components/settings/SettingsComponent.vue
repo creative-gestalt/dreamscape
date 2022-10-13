@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { useMainStore } from "@/stores/main";
 import { Colors } from "@/interfaces/settings.interface";
 
@@ -8,12 +8,7 @@ const mainStore = useMainStore();
 const { settings, reset, updateSettings } = mainStore;
 // data
 const selectedColorButton = ref("topBarColor" as keyof Colors);
-const currentColor = ref("");
 // watch
-watch(currentColor, (newColor) => {
-  settings.colors[selectedColorButton.value] = newColor;
-  updateSettings();
-});
 </script>
 
 <template>
@@ -97,7 +92,8 @@ watch(currentColor, (newColor) => {
         </v-btn>
       </v-btn-toggle>
       <v-color-picker
-        v-model="settings.colors[selectedColorButton]"
+        :model-value="settings.colors[selectedColorButton]"
+        @update:modelValue="updateSettings"
         width="100%"
         :hide-canvas="true"
         :show-swatches="true"
