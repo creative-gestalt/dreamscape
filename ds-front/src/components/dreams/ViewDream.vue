@@ -2,6 +2,7 @@
 import { computed, onBeforeMount, ref } from "vue";
 import { useMainStore } from "@/stores/main";
 import { useDreamStore } from "@/stores/dreams";
+import { storeToRefs } from "pinia";
 import { Dream, SubDream } from "@/interfaces/dream.interface";
 import { useDisplay } from "vuetify";
 import { useRoute, useRouter } from "vue-router";
@@ -12,7 +13,7 @@ const route = useRoute();
 //stores
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
-const colors = mainStore.gColors;
+const { colors } = storeToRefs(mainStore);
 const { gDate } = mainStore;
 const { getDream, updateDream, getDreamsForPage, deleteDreams } = dreamStore;
 // data

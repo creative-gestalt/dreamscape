@@ -19,7 +19,7 @@ export const useMainStore = defineStore(
     } as Settings);
     const loading = ref(false);
 
-    const gColors = computed(() => settings.colors);
+    const colors = computed(() => settings.colors);
 
     function gDate(): string {
       const now = new Date();
@@ -70,7 +70,7 @@ export const useMainStore = defineStore(
     return {
       settings,
       loading,
-      gColors,
+      colors,
       gDate,
       reset,
       getSettings,

@@ -13,9 +13,9 @@ const router = useRouter();
 // stores
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
-const colors = mainStore.gColors;
+const { colors } = storeToRefs(mainStore);
 const { updateLoading } = mainStore;
-const { getDreamsForPage, getDreamsCount, searchDreams } = dreamStore;
+const { getDreamsForPage, searchDreams } = dreamStore;
 const { dreams, dreamsCount } = storeToRefs(dreamStore);
 // data
 const search = ref("");

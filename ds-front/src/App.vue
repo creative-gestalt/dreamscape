@@ -9,7 +9,7 @@ import { storeToRefs } from "pinia";
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
 const sessionStore = useSessionStore();
-const colors = mainStore.gColors;
+const { colors } = storeToRefs(mainStore);
 const { loading } = storeToRefs(mainStore);
 const { getSettings } = mainStore;
 const { getDreamsForPage, getDreamDates, getDreamsCount } = dreamStore;

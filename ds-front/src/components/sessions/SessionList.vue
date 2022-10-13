@@ -2,12 +2,12 @@
 import { useMainStore } from "@/stores/main";
 import { useSessionStore } from "@/stores/sessions";
 import { storeToRefs } from "pinia";
-import { onMounted } from "vue";
+// import { onMounted } from "vue";
 
 // stores
 const mainStore = useMainStore();
 const sessionStore = useSessionStore();
-const colors = mainStore.gColors;
+const { colors } = storeToRefs(mainStore);
 const { sessions } = storeToRefs(sessionStore);
 // const { loadMoreSessions } = sessionStore;
 // data

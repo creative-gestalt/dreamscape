@@ -2,13 +2,14 @@
 import { computed, onMounted, ref } from "vue";
 import { useMainStore } from "@/stores/main";
 import { useSessionStore } from "@/stores/sessions";
+import { storeToRefs } from "pinia";
 import { QA } from "@/interfaces/session.interface";
 import SnackBar from "@/components/shared/SnackBar.vue";
 
 // stores
 const mainStore = useMainStore();
 const sessionStore = useSessionStore();
-const colors = mainStore.gColors;
+const { colors } = storeToRefs(mainStore);
 const { gDate, updateLoading } = mainStore;
 const { addSession, getAllSessions } = sessionStore;
 // data

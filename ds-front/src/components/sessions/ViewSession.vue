@@ -2,10 +2,10 @@
 import { computed, onBeforeMount, ref } from "vue";
 import { useMainStore } from "@/stores/main";
 import { useSessionStore } from "@/stores/sessions";
-import { Session } from "@/interfaces/session.interface";
 import { storeToRefs } from "pinia";
 import { useDisplay } from "vuetify";
 import { useRoute, useRouter } from "vue-router";
+import { Session } from "@/interfaces/session.interface";
 
 // router
 const router = useRouter();
@@ -13,7 +13,7 @@ const route = useRoute();
 // stores
 const mainStore = useMainStore();
 const sessionStore = useSessionStore();
-const colors = mainStore.gColors;
+const { colors } = storeToRefs(mainStore);
 const { gDate } = mainStore;
 const { getSession, updateSession, getAllSessions, deleteSessions } =
   sessionStore;

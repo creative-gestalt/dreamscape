@@ -2,13 +2,14 @@
 import { computed, onMounted, ref } from "vue";
 import { useMainStore } from "@/stores/main";
 import { useDreamStore } from "@/stores/dreams";
+import { storeToRefs } from "pinia";
 import { SubDream } from "@/interfaces/dream.interface";
 import SnackBar from "@/components/shared/SnackBar.vue";
 
 // stores
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
-const colors = mainStore.gColors;
+const { colors } = storeToRefs(mainStore);
 const { gDate } = mainStore;
 // data
 const date = ref("");
