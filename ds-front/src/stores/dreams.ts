@@ -11,13 +11,15 @@ export const useDreamStore = defineStore(
     const limit = ref(40);
     const dreams = ref([] as Dream[]);
     const dates = ref([] as DreamDate[]);
+    const years = ref([] as string[]);
     const dreamsCount = ref(0);
     const currentTab = ref(0);
 
     async function getDreamsCount(): Promise<void> {
-      await axios
-        .get(`${server.baseURL}/getDreamsCount`)
-        .then((data) => (dreamsCount.value = data.data));
+      await axios.get(`${server.baseURL}/getDreamsCount`).then((data) => {
+        dreamsCount.value = data.data.count;
+        years.value = data.data.years;
+      });
     }
     async function getDreamsForPage(payload: Pagination): Promise<void> {
       await axios
@@ -49,9 +51,9 @@ export const useDreamStore = defineStore(
     async function deleteDreams(payload: Dream[]): Promise<void> {
       await axios.post(`${server.baseURL}/deleteDreams`, payload);
     }
-    async function getDreamDates(): Promise<void> {
+    async function getDreamDates(year: string): Promise<void> {
       await axios
-        .get(`${server.baseURL}/getDreamDates`)
+        .get(`${server.baseURL}/getDreamDates/${year}`)
         .then((result) => (dates.value = result.data));
     }
 
@@ -59,6 +61,7 @@ export const useDreamStore = defineStore(
       limit,
       dreams,
       dates,
+      years,
       dreamsCount,
       currentTab,
       getDreamsCount,
@@ -71,5 +74,9 @@ export const useDreamStore = defineStore(
       getDreamDates,
     };
   },
-  { persist: { storage: sessionStorage } }
+  {
+    persist: {
+      storage: sessionStorage,
+    },
+  }
 );

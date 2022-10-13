@@ -21,9 +21,16 @@ export class DreamController {
 
   @Get('getDreamsCount')
   async getDreamsCount(@Res() res) {
-    const dreams = await this.dreamsService.getAllDreams();
-    const count = dreams.length;
-    return res.status(HttpStatus.OK).json(count);
+    const dates = await this.dreamsService.getField('date');
+    const count = dates.length;
+    const years = [
+      ...new Set(
+        [...dates].map((dreamDate: any) => dreamDate.date.slice(0, 4)),
+      ),
+    ]
+      .sort()
+      .reverse();
+    return res.status(HttpStatus.OK).json({ count, years });
   }
 
   @Get('getDreams/:params')
@@ -51,9 +58,9 @@ export class DreamController {
     return res.status(HttpStatus.OK).json(response);
   }
 
-  @Get('getDreamDates')
-  async getDreamDates(@Res() res) {
-    const dreams = await this.dreamsService.getAllDreams();
+  @Get('getDreamDates/:year')
+  async getDreamDates(@Res() res, @Param('year') year) {
+    const dreams = await this.dreamsService.getDreamsByFieldValue('date', year);
     const dates = dreams.map((dream) => {
       return {
         _id: dream._id,

@@ -61,7 +61,6 @@ async function dreamsForPage(pageNumber: number): Promise<void> {
 onMounted(async () => {
   if (dreamsCount.value === 0) {
     await dreamsForPage(1);
-    await getDreamsCount();
   }
 });
 </script>

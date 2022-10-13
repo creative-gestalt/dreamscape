@@ -19,8 +19,17 @@ export class DreamsService {
       .exec();
   }
 
-  async getAllDreams(): Promise<Dream[]> {
-    return await this.dreamModel.find().exec();
+  async getDreamsByFieldValue(
+    field: string,
+    value: any,
+  ): Promise<string[] | Dream[]> {
+    return await this.dreamModel
+      .find({ [field]: { $regex: `.*${value}.*`, $options: 'i' } })
+      .exec();
+  }
+
+  async getField(field: string): Promise<any[]> {
+    return await this.dreamModel.find().select(field).exec();
   }
 
   async getDream(dreamID): Promise<Dream> {

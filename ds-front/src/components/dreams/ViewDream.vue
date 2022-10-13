@@ -152,7 +152,7 @@ onBeforeMount(async () => {
               <template v-slot="{ inputEvents }">
                 <v-btn
                   v-on="inputEvents"
-                  :style="{ color: colors.topBarColor }"
+                  :style="{ color: colors.iconColor }"
                   variant="outlined"
                   :block="true"
                 >

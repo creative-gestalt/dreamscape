@@ -59,12 +59,8 @@ export const useMainStore = defineStore(
       }
     }
     async function updateLoading(payload: boolean): Promise<void> {
-      if (payload) {
-        loading.value = payload;
-      } else {
-        loading.value = payload;
-      }
-      return sleep(750);
+      loading.value = payload;
+      return sleep(500);
     }
 
     return {

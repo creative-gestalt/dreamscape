@@ -1,18 +1,19 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useMainStore } from "@/stores/main";
-import { storeToRefs } from "pinia";
+import { Colors } from "@/interfaces/settings.interface";
 
 // stores
 const mainStore = useMainStore();
-const { settings } = mainStore;
-const { reset, updateSettings } = mainStore;
+const { settings, reset, updateSettings } = mainStore;
 // data
-const selectedColorButton = ref("topBarColor");
-
-// function updateAllSettings(value: any): void {
-//   settings.colors[selectedColorButton] = value;
-// }
+const selectedColorButton = ref("topBarColor" as keyof Colors);
+const currentColor = ref("");
+// watch
+watch(currentColor, (newColor) => {
+  settings.colors[selectedColorButton.value] = newColor;
+  updateSettings();
+});
 </script>
 
 <template>
@@ -97,8 +98,10 @@ const selectedColorButton = ref("topBarColor");
       </v-btn-toggle>
       <v-color-picker
         v-model="settings.colors[selectedColorButton]"
+        width="100%"
+        :hide-canvas="true"
         :show-swatches="true"
-        @update:modelValue="updateSettings"
+        swatches-max-height="350"
       ></v-color-picker>
     </v-card>
     <v-card class="ma-auto" color="transparent" max-width="500">

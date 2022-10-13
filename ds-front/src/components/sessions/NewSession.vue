@@ -81,7 +81,7 @@ async function completeSession(): Promise<void> {
         time: time.value,
       },
     });
-    await getAllSessions;
+    await getAllSessions();
     entity.value = "";
     qas.value = [];
     snackText.value = "Successfully added session";

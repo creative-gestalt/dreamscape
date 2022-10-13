@@ -12,7 +12,7 @@ const sessionStore = useSessionStore();
 const colors = mainStore.gColors;
 const { loading } = storeToRefs(mainStore);
 const { getSettings } = mainStore;
-const { getDreamsForPage, getDreamDates } = dreamStore;
+const { getDreamsForPage, getDreamDates, getDreamsCount } = dreamStore;
 const { getAllSessions } = sessionStore;
 
 const mobile = useDisplay().xs.value;
@@ -24,7 +24,8 @@ onMounted(async () => {
     skip: 0,
     limit: 13,
   });
-  await getDreamDates();
+  await getDreamsCount();
+  await getDreamDates(new Date().getFullYear().toString());
   await getAllSessions();
 });
 </script>
