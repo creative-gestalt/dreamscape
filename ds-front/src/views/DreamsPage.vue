@@ -5,10 +5,11 @@ import { useMainStore } from "@/stores/main";
 import { useDreamStore } from "@/stores/dreams";
 import { useDisplay } from "vuetify";
 import { onMounted, ref } from "vue";
+import { storeToRefs } from "pinia";
 
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
-const { settings } = mainStore;
+const { settings } = storeToRefs(mainStore);
 const mobile = useDisplay().xs.value;
 const show = ref(false);
 const tab = ref(0);

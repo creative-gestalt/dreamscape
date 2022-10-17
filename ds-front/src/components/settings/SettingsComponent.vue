@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { onMounted, ref, watch } from "vue";
 import { useMainStore } from "@/stores/main";
+import { storeToRefs } from "pinia";
 
 // stores
 const mainStore = useMainStore();
-const { settings } = mainStore;
+const { settings } = storeToRefs(mainStore);
 const { reset, updateSettings, getSettings } = mainStore;
 // data
 const selectedColorButton = ref("topBarColor");

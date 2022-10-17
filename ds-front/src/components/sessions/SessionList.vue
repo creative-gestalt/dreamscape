@@ -7,7 +7,7 @@ import { storeToRefs } from "pinia";
 // stores
 const mainStore = useMainStore();
 const sessionStore = useSessionStore();
-const { settings } = mainStore;
+const { settings } = storeToRefs(mainStore);
 const { sessions } = storeToRefs(sessionStore);
 // const { loadMoreSessions } = sessionStore;
 // data

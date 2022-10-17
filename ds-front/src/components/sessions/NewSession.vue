@@ -9,7 +9,8 @@ import SnackBar from "@/components/shared/SnackBar.vue";
 // stores
 const mainStore = useMainStore();
 const sessionStore = useSessionStore();
-const { gDate, updateLoading, settings } = mainStore;
+const { settings } = storeToRefs(mainStore);
+const { gDate, updateLoading } = mainStore;
 const { addSession, getAllSessions } = sessionStore;
 // data
 const qas = ref([] as QA[]);

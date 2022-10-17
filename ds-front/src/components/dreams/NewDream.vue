@@ -9,7 +9,8 @@ import SnackBar from "@/components/shared/SnackBar.vue";
 // stores
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
-const { gDate, settings } = mainStore;
+const { settings } = storeToRefs(mainStore);
+const { gDate } = mainStore;
 // data
 const date = ref("");
 const max = ref("");

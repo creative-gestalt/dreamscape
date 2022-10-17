@@ -11,8 +11,9 @@ const router = useRouter();
 // stores
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
+const { settings } = storeToRefs(mainStore);
 const { dates, years } = storeToRefs(dreamStore);
-const { gDate, settings } = mainStore;
+const { gDate } = mainStore;
 const { getDreamDates } = dreamStore;
 // data
 const selectedYear = ref("");

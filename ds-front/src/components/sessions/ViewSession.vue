@@ -13,7 +13,8 @@ const route = useRoute();
 // stores
 const mainStore = useMainStore();
 const sessionStore = useSessionStore();
-const { gDate, settings } = mainStore;
+const { settings } = storeToRefs(mainStore);
+const { gDate } = mainStore;
 const { getSession, updateSession, getAllSessions, deleteSessions } =
   sessionStore;
 // data

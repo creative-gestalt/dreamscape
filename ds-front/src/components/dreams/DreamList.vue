@@ -13,7 +13,8 @@ const router = useRouter();
 // stores
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
-const { updateLoading, settings } = mainStore;
+const { settings } = storeToRefs(mainStore);
+const { updateLoading } = mainStore;
 const { getDreamsForPage, searchDreams } = dreamStore;
 const { dreams, dreamsCount } = storeToRefs(dreamStore);
 // data

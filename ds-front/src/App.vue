@@ -9,8 +9,8 @@ import { storeToRefs } from "pinia";
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
 const sessionStore = useSessionStore();
-const { loading } = storeToRefs(mainStore);
-const { getSettings, settings } = mainStore;
+const { loading, settings } = storeToRefs(mainStore);
+const { getSettings } = mainStore;
 const { getDreamsForPage, getDreamDates, getDreamsCount } = dreamStore;
 const { getAllSessions } = sessionStore;
 

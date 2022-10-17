@@ -13,7 +13,8 @@ const route = useRoute();
 //stores
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
-const { gDate, settings } = mainStore;
+const { settings } = storeToRefs(mainStore);
+const { gDate } = mainStore;
 const { getDream, updateDream, getDreamsForPage, deleteDreams } = dreamStore;
 // data
 const mobile = useDisplay().xs.value;
