@@ -7,7 +7,7 @@ import { storeToRefs } from "pinia";
 // stores
 const mainStore = useMainStore();
 const sessionStore = useSessionStore();
-const { colors } = storeToRefs(mainStore);
+const { settings } = mainStore;
 const { sessions } = storeToRefs(sessionStore);
 // const { loadMoreSessions } = sessionStore;
 // data
@@ -41,16 +41,16 @@ function formatSessionDate(date: string): string {
     v-if="sessions && sessions.length > 0"
     class="ma-2 ma-auto"
     max-width="800"
-    :color="colors.topBarColor"
+    :color="settings.colors.topBarColor"
   >
-    <v-list class="overflow-y-auto" :bg-color="colors.topBarColor">
+    <v-list class="overflow-y-auto" :bg-color="settings.colors.topBarColor">
       <template v-for="(session, index) of sessions" :key="index">
         <v-list-item
           :title="formatSessionDate(session.date)"
           :to="{ name: 'ViewSessionPage', params: { id: session._id } }"
         >
           <template #subtitle>
-            <span :style="{ color: colors.textColor }">
+            <span :style="{ color: settings.colors.textColor }">
               {{ session.session.entity }}
             </span>
           </template>
@@ -70,8 +70,8 @@ function formatSessionDate(date: string): string {
     </v-list>
   </v-card>
   <v-container v-else>
-    <v-card :color="colors.topBarColor">
-      <v-card-title :style="{ color: colors.textColor }">
+    <v-card :color="settings.colors.topBarColor">
+      <v-card-title :style="{ color: settings.colors.textColor }">
         No Sessions Here Yet
       </v-card-title>
     </v-card>

@@ -1,20 +1,21 @@
 <script lang="ts" setup>
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useMainStore } from "@/stores/main";
-import { Colors } from "@/interfaces/settings.interface";
-import { storeToRefs } from "pinia";
 
 // stores
 const mainStore = useMainStore();
-const { settings } = storeToRefs(mainStore);
-const { reset, updateSettings } = mainStore;
+const { settings } = mainStore;
+const { reset, updateSettings, getSettings } = mainStore;
 // data
-const selectedColorButton = ref("topBarColor" as keyof Colors);
+const selectedColorButton = ref("topBarColor");
 const currentColor = ref("");
 // watch
 watch(currentColor, (newColor) => {
-  settings.value.colors[selectedColorButton.value] = newColor;
-  updateSettings();
+  updateSettings(selectedColorButton.value, newColor);
+});
+
+onMounted(() => {
+  getSettings();
 });
 </script>
 

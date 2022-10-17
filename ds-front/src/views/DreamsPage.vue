@@ -5,11 +5,10 @@ import { useMainStore } from "@/stores/main";
 import { useDreamStore } from "@/stores/dreams";
 import { useDisplay } from "vuetify";
 import { onMounted, ref } from "vue";
-import { storeToRefs } from "pinia";
 
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
-const { gColors } = storeToRefs(mainStore);
+const { settings } = mainStore;
 const mobile = useDisplay().xs.value;
 const show = ref(false);
 const tab = ref(0);
@@ -31,8 +30,8 @@ onMounted(() => {
       <v-tabs
         :model-value="tab"
         @update:modelValue="handleTabs"
-        :color="gColors.textColor"
-        :bg-color="gColors.backgroundColor"
+        :color="settings.colors.textColor"
+        :bg-color="settings.colors.backgroundColor"
         :grow="mobile"
         :centered="true"
       >

@@ -11,9 +11,8 @@ const router = useRouter();
 // stores
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
-const { colors } = storeToRefs(mainStore);
-const { gDate } = mainStore;
 const { dates, years } = storeToRefs(dreamStore);
+const { gDate, settings } = mainStore;
 const { getDreamDates } = dreamStore;
 // data
 const selectedYear = ref("");
@@ -54,7 +53,7 @@ onMounted(() => {
   <v-container>
     <v-row>
       <v-col>
-        <v-sheet class="ma-auto mb-3">
+        <v-sheet class="ma-auto mb-3" rounded>
           <v-slide-group :model-value="selectedYear" show-arrows>
             <v-slide-group-item
               #="{ isSelected }"
@@ -68,7 +67,9 @@ onMounted(() => {
                   selectedYear = year;
                   getNewDreamDates();
                 "
-                :color="isSelected ? colors.completeBtnColor : undefined"
+                :color="
+                  isSelected ? settings.colors.completeBtnColor : undefined
+                "
                 >{{ year }}
               </v-btn>
             </v-slide-group-item>

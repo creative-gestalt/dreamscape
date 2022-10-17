@@ -9,8 +9,7 @@ import SnackBar from "@/components/shared/SnackBar.vue";
 // stores
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
-const { colors } = storeToRefs(mainStore);
-const { gDate } = mainStore;
+const { gDate, settings } = mainStore;
 // data
 const date = ref("");
 const max = ref("");
@@ -122,14 +121,14 @@ onMounted(() => {
         <v-card
           class="pa-2 ma-auto"
           max-width="800"
-          :color="colors.topBarColor"
+          :color="settings.colors.topBarColor"
           :hover="true"
         >
           <v-chip
             v-for="(dream, index) of dreams"
             :key="dream + index"
             class="mb-2 mx-1"
-            :style="{ color: colors.textColor }"
+            :style="{ color: settings.colors.textColor }"
             @click:close="deleteSubDream(index)"
             closable
             label
@@ -142,15 +141,15 @@ onMounted(() => {
             label="Dream"
             rows="8"
             :messages="time"
-            :color="colors.textColor"
+            :color="settings.colors.textColor"
             density="compact"
           ></v-textarea>
           <v-row class="mb-3 mt-0">
             <v-col cols="12">
               <v-btn
                 @click="addDream(dream)"
-                :color="colors.backgroundColor"
-                :style="{ color: colors.textColor }"
+                :color="settings.colors.backgroundColor"
+                :style="{ color: settings.colors.textColor }"
                 :block="true"
               >
                 Add Dream
@@ -165,7 +164,8 @@ onMounted(() => {
                 min-date="1950-01-01"
                 :popover="{ visibility: 'click' }"
                 :style="{
-                  backgroundColor: colors.backgroundColor,
+                  borderColor: settings.colors.topBarColor,
+                  backgroundColor: settings.colors.backgroundColor,
                   borderRadius: '10px',
                 }"
                 is-dark
@@ -173,8 +173,8 @@ onMounted(() => {
                 <template v-slot="{ inputEvents }">
                   <v-btn
                     v-on="inputEvents"
-                    :color="colors.backgroundColor"
-                    :style="{ color: colors.textColor }"
+                    :color="settings.colors.backgroundColor"
+                    :style="{ color: settings.colors.textColor }"
                     :block="true"
                   >
                     {{ computedDay }}
@@ -185,8 +185,8 @@ onMounted(() => {
             <v-col class="pl-1" cols="6">
               <v-btn
                 @click="timeModal = true"
-                :color="colors.backgroundColor"
-                :style="{ color: colors.textColor }"
+                :color="settings.colors.backgroundColor"
+                :style="{ color: settings.colors.textColor }"
                 :block="true"
               >
                 <v-icon>mdi-clock-outline</v-icon>
@@ -197,13 +197,13 @@ onMounted(() => {
         <v-card
           class="pa-2 mt-5 ma-auto"
           max-width="800"
-          :color="colors.topBarColor"
+          :color="settings.colors.topBarColor"
           :hover="true"
         >
           <v-chip
             v-for="(chip, index) in chips"
             :key="chip + index"
-            :style="{ color: colors.textColor }"
+            :style="{ color: settings.colors.textColor }"
             @click:close="removeKeyword(chip)"
             class="mx-1 mb-1"
             closable
@@ -216,7 +216,7 @@ onMounted(() => {
             v-model="keywords"
             label="Keywords"
             append-icon="mdi-check"
-            :color="colors.textColor"
+            :color="settings.colors.textColor"
             @click:append="addChip(keywords)"
             @keyup.enter="addChip(keywords)"
             density="compact"
@@ -229,7 +229,7 @@ onMounted(() => {
       <v-btn
         class="mt-5"
         @click="completeDream"
-        :color="colors.completeBtnColor"
+        :color="settings.colors.completeBtnColor"
         :block="true"
       >
         Complete
@@ -244,7 +244,7 @@ onMounted(() => {
     ></SnackBar>
 
     <v-dialog v-model="timeModal" max-width="300" dark>
-      <v-card :color="colors.topBarColor">
+      <v-card :color="settings.colors.topBarColor">
         <v-card-title>Set Time</v-card-title>
         <v-container>
           <v-text-field
@@ -256,7 +256,7 @@ onMounted(() => {
           </v-text-field>
           <v-btn
             @click="setNewTime"
-            :color="colors.completeBtnColor"
+            :color="settings.colors.completeBtnColor"
             :block="true"
           >
             Set

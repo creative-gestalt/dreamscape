@@ -13,8 +13,7 @@ const router = useRouter();
 // stores
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
-const { colors } = storeToRefs(mainStore);
-const { updateLoading } = mainStore;
+const { updateLoading, settings } = mainStore;
 const { getDreamsForPage, searchDreams } = dreamStore;
 const { dreams, dreamsCount } = storeToRefs(dreamStore);
 // data
@@ -66,13 +65,17 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-card class="ma-2 ma-auto" max-width="800" :color="colors.topBarColor">
+  <v-card
+    class="ma-2 ma-auto"
+    max-width="800"
+    :color="settings.colors.topBarColor"
+  >
     <DataTable
       :items="dreams"
       :headers="headers"
       :items-per-page="itemsPerPage"
       @click:row="handleClick"
-      :bg-color="colors.topBarColor"
+      :bg-color="settings.colors.topBarColor"
     >
       <template #search>
         <v-row class="pa-4">
@@ -99,20 +102,20 @@ onMounted(async () => {
         </v-row>
       </template>
       <template #item="{ item }">
-        <div :style="{ color: colors.textColor }">
+        <div :style="{ color: settings.colors.textColor }">
           <v-list-item class="px-0" density="compact" link>
             <template #prepend>
               <v-avatar class="mx-0 ml-n3">{{ item.dreams.length }}</v-avatar>
             </template>
             <template #title>
-              <span :style="{ color: colors.textColor }">
+              <span :style="{ color: settings.colors.textColor }">
                 {{ formatDreamDate(item.date) }}
               </span>
             </template>
             <template #subtitle>
               <span
                 class="single-line__text"
-                :style="{ color: colors.textColor }"
+                :style="{ color: settings.colors.textColor }"
               >
                 {{ item.dreams[0].subDream }}
               </span>
@@ -125,7 +128,7 @@ onMounted(async () => {
       :model-value="currentPage"
       @update:modelValue="dreamsForPage"
       :length="compPages"
-      :active-color="colors.completeBtnColor"
+      :active-color="settings.colors.completeBtnColor"
       density="comfortable"
       variant="elevated"
     >
