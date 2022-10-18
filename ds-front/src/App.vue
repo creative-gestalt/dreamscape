@@ -31,7 +31,7 @@ onMounted(async () => {
 
 <template>
   <v-app id="app" :style="{ background: settings.colors.backgroundColor }">
-    <v-app-bar :color="settings.colors.topBarColor" dark app>
+    <v-app-bar :color="settings.colors.topBarColor" density="compact" dark app>
       <div class="d-flex align-center pr-5">
         <v-img class="ml-3" width="35" src="./assets/ga-logo-black.png"></v-img>
       </div>
@@ -80,8 +80,10 @@ onMounted(async () => {
       :model-value="selectedNav"
       :bg-color="settings.colors.topBarColor"
       :grow="true"
+      class="pb-3"
+      density="compact"
+      height="80"
       mode="shift"
-      app
     >
       <v-btn :color="settings.colors.topBarColor" value="0" to="/dreams">
         <span :style="{ color: settings.colors.iconColor }"> Dreams </span>
