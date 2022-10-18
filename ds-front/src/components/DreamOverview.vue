@@ -54,7 +54,11 @@ onMounted(() => {
   <v-container>
     <v-row>
       <v-col>
-        <v-sheet class="ma-auto mb-3" rounded>
+        <v-sheet
+          class="ma-auto mb-3"
+          :color="settings.colors.topBarColor"
+          rounded
+        >
           <v-slide-group :model-value="selectedYear" show-arrows>
             <v-slide-group-item
               #="{ isSelected }"
@@ -69,7 +73,9 @@ onMounted(() => {
                   getNewDreamDates();
                 "
                 :color="
-                  isSelected ? settings.colors.completeBtnColor : undefined
+                  isSelected
+                    ? settings.colors.completeBtnColor
+                    : settings.colors.topBarColor
                 "
                 >{{ year }}
               </v-btn>
@@ -84,6 +90,10 @@ onMounted(() => {
       :columns="$screens({ lg: 4 }, 1)"
       :rows="$screens({ lg: 3 }, 2)"
       :attributes="localDreamDates"
+      :style="{
+        borderColor: settings.colors.iconColor,
+        backgroundColor: settings.colors.topBarColor,
+      }"
       is-expanded
       is-dark
     >

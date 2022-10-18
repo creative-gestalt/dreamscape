@@ -70,10 +70,13 @@ onBeforeMount(async () => {
   <v-container>
     <v-card
       class="ma-auto mb-16"
-      :color="settings.colors.topBarColor"
+      :color="settings.colors.iconColor"
       max-width="800"
       variant="outlined"
-      :style="{ minHeight: '75vh' }"
+      :style="{
+        minHeight: '75vh',
+        backgroundColor: settings.colors.topBarColor,
+      }"
     >
       <v-container class="pb-0 mb-n2">
         <v-row>
@@ -84,7 +87,7 @@ onBeforeMount(async () => {
               min-date="1950-01-01"
               :popover="{ visibility: 'click' }"
               :style="{
-                backgroundColor: settings.colors.backgroundColor,
+                backgroundColor: settings.colors.topBarColor,
                 borderRadius: '10px',
               }"
               is-dark

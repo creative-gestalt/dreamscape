@@ -2,6 +2,7 @@
 import { onMounted, ref, watch } from "vue";
 import { useMainStore } from "@/stores/main";
 import { storeToRefs } from "pinia";
+import { Colors } from "@/interfaces/settings.interface";
 
 // stores
 const mainStore = useMainStore();
@@ -10,6 +11,11 @@ const { reset, updateSettings, getSettings } = mainStore;
 // data
 const selectedColorButton = ref("topBarColor");
 const currentColor = ref("");
+// methods
+function updateColorSelection(value: string) {
+  selectedColorButton.value = value;
+  currentColor.value = settings.value.colors[value as keyof Colors];
+}
 // watch
 watch(currentColor, (newColor) => {
   updateSettings(selectedColorButton.value, newColor);
@@ -23,7 +29,11 @@ onMounted(() => {
 <template>
   <v-container>
     <v-card class="ma-auto" max-width="500">
-      <v-btn-toggle v-model="selectedColorButton" class="d-flex">
+      <v-btn-toggle
+        :model-value="selectedColorButton"
+        @update:modelValue="updateColorSelection"
+        class="d-flex"
+      >
         <v-btn
           class="flex-grow-1"
           value="topBarColor"

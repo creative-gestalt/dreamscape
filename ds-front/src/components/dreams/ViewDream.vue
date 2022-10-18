@@ -123,18 +123,22 @@ onBeforeMount(async () => {
       v-if="edit"
       @click="addSubDream"
       :color="settings.colors.completeBtnColor"
-      position="fixed"
-      location="bottom right"
-      rounded
+      class="mb-16 mr-2"
+      location="right bottom"
+      position="absolute"
+      icon
     >
       +
     </v-btn>
     <v-card
       class="ma-auto mb-16"
-      :color="settings.colors.topBarColor"
+      :color="settings.colors.iconColor"
       max-width="800"
       variant="outlined"
-      :style="{ minHeight: '75vh' }"
+      :style="{
+        minHeight: '75vh',
+        backgroundColor: settings.colors.topBarColor,
+      }"
     >
       <v-container class="pb-0 mb-n2">
         <v-row align="center" justify="center" no-gutters>
@@ -145,7 +149,7 @@ onBeforeMount(async () => {
               min-date="1950-01-01"
               :popover="{ visibility: 'click' }"
               :style="{
-                backgroundColor: settings.colors.backgroundColor,
+                backgroundColor: settings.colors.topBarColor,
                 borderRadius: '10px',
               }"
               is-dark
@@ -187,7 +191,7 @@ onBeforeMount(async () => {
                   mdi-menu
                 </v-icon>
               </template>
-              <v-list :color="settings.colors.backgroundColor">
+              <v-list :bg-color="settings.colors.backgroundColor">
                 <v-list-item link>
                   <v-list-item-title @click="deleteDream" style="color: red">
                     Delete
@@ -203,7 +207,7 @@ onBeforeMount(async () => {
           v-for="(dream, index) of dream.dreams"
           :key="index"
           class="py-4 my-5"
-          :color="settings.colors.topBarColor"
+          :color="settings.colors.iconColor"
           variant="outlined"
         >
           <v-row align="center" justify="center">

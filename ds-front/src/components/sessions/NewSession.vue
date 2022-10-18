@@ -150,18 +150,8 @@ onMounted(() => {
             @keyup.enter="addQuestionsAnswers({ question, answer })"
             density="compact"
           ></v-text-field>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="12">
-        <v-card
-          class="pa-2 ma-auto"
-          max-width="800"
-          :color="settings.colors.topBarColor"
-          :hover="true"
-        >
-          <v-row class="mt-n3">
+
+          <v-row class="mt-1">
             <v-col cols="12">
               <v-btn
                 @click="addQuestionsAnswers({ question, answer })"
@@ -213,7 +203,7 @@ onMounted(() => {
       </v-col>
     </v-row>
 
-    <v-card class="ma-auto" color="transparent" max-width="800">
+    <v-sheet class="ma-auto" color="transparent" max-width="800">
       <v-btn
         class="mt-5"
         @click="completeSession"
@@ -222,7 +212,7 @@ onMounted(() => {
       >
         Complete
       </v-btn>
-    </v-card>
+    </v-sheet>
 
     <SnackBar
       :toggle="snackbar"

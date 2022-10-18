@@ -165,9 +165,8 @@ onMounted(() => {
                 min-date="1950-01-01"
                 :popover="{ visibility: 'click' }"
                 :style="{
-                  borderColor: settings.colors.topBarColor,
-                  backgroundColor: settings.colors.backgroundColor,
-                  borderRadius: '10px',
+                  borderColor: settings.colors.iconColor,
+                  backgroundColor: settings.colors.topBarColor,
                 }"
                 is-dark
               >
@@ -226,7 +225,7 @@ onMounted(() => {
       </v-col>
     </v-row>
 
-    <v-card class="ma-auto" color="transparent" max-width="800">
+    <v-sheet class="ma-auto" color="transparent" max-width="800">
       <v-btn
         class="mt-5"
         @click="completeDream"
@@ -235,7 +234,7 @@ onMounted(() => {
       >
         Complete
       </v-btn>
-    </v-card>
+    </v-sheet>
 
     <SnackBar
       :toggle="snackbar"
