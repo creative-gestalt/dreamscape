@@ -13,7 +13,7 @@ const mainStore = useMainStore();
 const dreamStore = useDreamStore();
 const { settings } = storeToRefs(mainStore);
 const { dates, years } = storeToRefs(dreamStore);
-const { gDate } = mainStore;
+const { mstDate } = mainStore;
 const { getDreamDates } = dreamStore;
 // data
 const selectedYear = ref("");
@@ -46,7 +46,7 @@ function getNewDreamDates(): void {
 }
 
 onMounted(() => {
-  selectedYear.value = gDate().slice(0, 4);
+  selectedYear.value = mstDate().slice(0, 4);
 });
 </script>
 

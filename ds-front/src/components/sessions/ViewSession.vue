@@ -14,7 +14,7 @@ const route = useRoute();
 const mainStore = useMainStore();
 const sessionStore = useSessionStore();
 const { settings } = storeToRefs(mainStore);
-const { gDate } = mainStore;
+const { mstDate } = mainStore;
 const { getSession, updateSession, getAllSessions, deleteSessions } =
   sessionStore;
 // data
@@ -62,7 +62,7 @@ onBeforeMount(async () => {
   id.value = String(route.params.id);
   session.value = await getSession({ _id: id.value } as Session);
   sessionTime.value = session.value.date.slice(11, 19);
-  max.value = gDate();
+  max.value = new Date().toISOString();
 });
 </script>
 
@@ -82,6 +82,7 @@ onBeforeMount(async () => {
         <v-row>
           <v-col cols="10">
             <v-date-picker
+              timezone="America/Boise"
               v-model="session.date"
               :max-date="max"
               min-date="1950-01-01"

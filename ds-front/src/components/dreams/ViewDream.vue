@@ -14,7 +14,6 @@ const route = useRoute();
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
 const { settings } = storeToRefs(mainStore);
-const { gDate } = mainStore;
 const { getDream, updateDream, getDreamsForPage, deleteDreams } = dreamStore;
 // data
 const mobile = useDisplay().xs.value;
@@ -113,7 +112,7 @@ onBeforeMount(async () => {
   id.value = String(route.params.id);
   dream.value = await getDream({ _id: id.value } as Dream);
   dreamTime.value = dream.value.date.slice(11, 19);
-  max.value = gDate();
+  max.value = new Date().toISOString();
 });
 </script>
 
@@ -144,6 +143,7 @@ onBeforeMount(async () => {
         <v-row align="center" justify="center" no-gutters>
           <v-col cols="8">
             <v-date-picker
+              timezone="America/Boise"
               v-model="dream.date"
               :max-date="max"
               min-date="1950-01-01"

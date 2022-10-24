@@ -64,6 +64,7 @@ onMounted(async () => {
       <v-overlay
         :model-value="loading"
         class="ma-auto align-center justify-center ios-overlay"
+        theme="light"
         contained
       >
         <v-progress-circular

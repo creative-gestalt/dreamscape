@@ -10,7 +10,6 @@ import SnackBar from "@/components/shared/SnackBar.vue";
 const mainStore = useMainStore();
 const dreamStore = useDreamStore();
 const { settings } = storeToRefs(mainStore);
-const { gDate } = mainStore;
 // data
 const date = ref("");
 const max = ref("");
@@ -111,7 +110,7 @@ async function completeDream(): Promise<void> {
 }
 
 onMounted(() => {
-  date.value = max.value = gDate();
+  date.value = max.value = new Date().toISOString();
 });
 </script>
 
@@ -160,6 +159,7 @@ onMounted(() => {
           <v-row class="mt-n7">
             <v-col cols="6">
               <v-date-picker
+                timezone="America/Boise"
                 v-model="date"
                 :max-date="max"
                 min-date="1950-01-01"

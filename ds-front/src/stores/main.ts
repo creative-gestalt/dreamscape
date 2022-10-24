@@ -20,7 +20,7 @@ export const useMainStore = defineStore(
     } as Settings);
     const loading = ref(false);
 
-    function gDate(): string {
+    function mstDate(): string {
       const now = new Date();
       const offsetMs = now.getTimezoneOffset() * 60 * 1000;
       const dateLocal = new Date(now.getTime() - offsetMs);
@@ -66,7 +66,7 @@ export const useMainStore = defineStore(
     return {
       settings,
       loading,
-      gDate,
+      mstDate,
       reset,
       getSettings,
       updateSettings,

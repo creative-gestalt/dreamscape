@@ -10,7 +10,7 @@ import SnackBar from "@/components/shared/SnackBar.vue";
 const mainStore = useMainStore();
 const sessionStore = useSessionStore();
 const { settings } = storeToRefs(mainStore);
-const { gDate, updateLoading } = mainStore;
+const { mstDate, updateLoading } = mainStore;
 const { addSession, getAllSessions } = sessionStore;
 // data
 const qas = ref([] as QA[]);
@@ -75,7 +75,7 @@ async function completeSession(): Promise<void> {
     });
   if (date.value && entity.value.length > 0 && qas.value.length > 0) {
     await addSession({
-      date: gDate(),
+      date: mstDate(),
       session: {
         entity: entity.value,
         qas: qas.value,
@@ -94,7 +94,7 @@ async function completeSession(): Promise<void> {
 }
 
 onMounted(() => {
-  date.value = max.value = mainStore.gDate();
+  date.value = max.value = new Date().toISOString();
 });
 </script>
 
@@ -166,6 +166,7 @@ onMounted(() => {
           <v-row>
             <v-col cols="6">
               <v-date-picker
+                timezone="America/Boise"
                 v-model="date"
                 :max-date="max"
                 min-date="1950-01-01"
