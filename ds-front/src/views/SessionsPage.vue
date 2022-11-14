@@ -34,7 +34,7 @@ onMounted(() => {
         :color="settings.colors.textColor"
         :bg-color="settings.colors.backgroundColor"
         :grow="mobile"
-        :centered="true"
+        fixed-tabs
       >
         <v-tab :value="0">new</v-tab>
         <v-tab :value="1">all</v-tab>
