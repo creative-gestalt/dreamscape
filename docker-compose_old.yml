@@ -1,14 +1,27 @@
 version: "3.9"
 services:
-  dreamscape:
-    container_name: dreamscape_v4
-    working_dir: /dreamscape
-    image: creativegestalt/dreamscape:latest
-    environment:
-      SERVER_ADDRESS: http://${SERVER_HOST}:${SERVER_PORT}
+  ds_front:
+    build:
+      context: ./ds-front
+      args:
+        SERVER_ADDRESS: http://${SERVER_HOST}:${SERVER_PORT}
+    container_name: ds-front_${FRONT_PORT}
+    working_dir: /ds-front
     ports:
       - "${FRONT_PORT}:8080"
+    command: serve -s dist -l 8080
+    restart: unless-stopped
+
+  ds_back:
+    build: ./ds-back
+    container_name: ds-back_${SERVER_PORT}
+    working_dir: /ds-back
+    ports:
       - "${SERVER_PORT}:3000"
+    environment:
+      MONGODB_CONNSTRING: mongodb://${DB_USER}:${DB_PWD}@mongodb
+    command: node dist/main
+    restart: unless-stopped
     links:
       - mongodb
 
