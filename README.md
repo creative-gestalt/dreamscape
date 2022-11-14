@@ -45,7 +45,7 @@ DB_ROOT_USER=root
 DB_ROOT_PWD=root
 DB_USER=dreamscape_usr
 DB_PWD=dreamscape_pwd
-INIT_DB=dreamscape_db
+DB_NAME=dreamscape_db
 DB_PORT=27017
 ```
 
@@ -72,7 +72,7 @@ production containers.
 Connect via MongoDB Compass by placing the following values into the connection string:<br />
 
 ```
-mongodb://{DB_USER}:{DB_PWD}@{SERVER_HOST}:{DB_PORT}/{INIT_DB}
+mongodb://{DB_USER}:{DB_PWD}@{SERVER_HOST}:{DB_PORT}/{DB_NAME}
 ```
 
 ex: `mongodb://dreamscape_usr:dreamscape_pwd@192.168.0.105:27017/dreamscape_db`
@@ -92,7 +92,7 @@ ex: `mongodb://root:root@192.168.0.105:27017/`
 If you want to run a cron to maintain backups or just want to run it via command:
 
 ```
-mongodump --uri="mongodb://{DB_USER}:{DB_PWD}@{SERVER_HOST}:{DB_PORT}" --db={INIT_DB} --out=/home/<you>/db/
+mongodump --uri="mongodb://{DB_USER}:{DB_PWD}@{SERVER_HOST}:{DB_PORT}" --db={DB_NAME} --out=/home/<you>/db/
 ```
 
 ex: `mongodump --uri="mongodb://dreamscape_usr:dreamscape_pwd@192.168.0.105:27017" --db=dreamscape_db --out=/home/nick/db/`
@@ -100,7 +100,7 @@ ex: `mongodump --uri="mongodb://dreamscape_usr:dreamscape_pwd@192.168.0.105:2701
 ### Restore
 
 ```
-mongorestore --host={SERVER_HOST} --port={DB_PORT} --username={DB_USER} --password={DB_PWD} --authenticationDatabase={INIT_DB} /path/to/any-dir/
+mongorestore --host={SERVER_HOST} --port={DB_PORT} --username={DB_USER} --password={DB_PWD} --authenticationDatabase={DB_NAME} /path/to/any-dir/
 ```
 
 ex: `mongorestore --host=192.168.0.105 --port=27017 --username=dreamscape_usr --password=dreamscape_pwd --authenticationDatabase=dreamscape_db /home/nick/db/`
