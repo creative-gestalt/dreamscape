@@ -1,8 +1,7 @@
 version: "3.9"
 services:
   dreamscape:
-    container_name: dreamscape_v4
-    working_dir: /dreamscape
+    container_name: dreamscape
     image: creativegestalt/dreamscape:latest
     environment:
       SERVER_ADDRESS: http://${SERVER_HOST}:${SERVER_PORT}
@@ -11,21 +10,20 @@ services:
       - "${SERVER_PORT}:3000"
     links:
       - mongodb
-    command: serve -s dist -l 8080 && node dist/main
     restart: unless-stopped
 
-   mongodb:
-     image: mongo:5.0
-     container_name: ds-mongo_${DB_PORT}
-     environment:
-       DB_USER: ${DB_USER}
-       DB_PWD: ${DB_PWD}
-       INIT_DB: ${INIT_DB}
-       MONGO_INITDB_ROOT_USERNAME: ${DB_ROOT_USER}
-       MONGO_INITDB_ROOT_PASSWORD: ${DB_ROOT_PWD}
-     ports:
-       - "${DB_PORT}:27017"
-     volumes:
-       - ./data:/data/db
-       - ./init-mongodb:/docker-entrypoint-initdb.d:ro
-     restart: unless-stopped
+  mongodb:
+    image: mongo:5.0
+    container_name: ds-mongo_${DB_PORT}
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PWD: ${DB_PWD}
+      INIT_DB: ${INIT_DB}
+      MONGO_INITDB_ROOT_USERNAME: ${DB_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_ROOT_PWD}
+    ports:
+      - "${DB_PORT}:27017"
+    volumes:
+      - ./data:/data/db
+      - ./init-mongodb:/docker-entrypoint-initdb.d:ro
+    restart: unless-stopped

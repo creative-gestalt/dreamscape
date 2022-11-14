@@ -31,7 +31,7 @@ services:
     environment:
       DB_USER: ${DB_USER}
       DB_PWD: ${DB_PWD}
-      INIT_DB: ${INIT_DB}
+      DB_NAME: ${DB_NAME}
       MONGO_INITDB_ROOT_USERNAME: ${DB_ROOT_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${DB_ROOT_PWD}
     ports:

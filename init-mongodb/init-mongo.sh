@@ -1,7 +1,7 @@
 set -e
 
 mongo <<EOF
-db = db.getSiblingDB("$INIT_DB")
+db = db.getSiblingDB("$DB_NAME")
 
 db.createUser({
     user: "$DB_USER",
@@ -9,7 +9,7 @@ db.createUser({
     roles: [
         {
             role: "readWrite",
-            db: "$INIT_DB"
+            db: "$DB_NAME"
         }
     ]
 })

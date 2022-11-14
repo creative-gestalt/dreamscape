@@ -1,10 +1,11 @@
 version: "3.9"
 services:
   dreamscape:
-    container_name: dreamscape_v4
+    container_name: dreamscape
     image: creativegestalt/dreamscape:latest
     environment:
       SERVER_ADDRESS: http://${SERVER_HOST}:${SERVER_PORT}
+      MONGODB_CONNSTRING: mongodb://localhost/${DB_NAME}
     ports:
       - "${FRONT_PORT}:8080"
       - "${SERVER_PORT}:3000"
