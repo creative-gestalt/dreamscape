@@ -22,5 +22,7 @@ COPY --from=build-stage /home/node/ds-front/node_modules /ds-front/node_modules
 # copy backend to prod
 COPY --from=build-stage /home/node/ds-back/dist /ds-back/dist
 COPY --from=build-stage /home/node/ds-back/node_modules /ds-back/node_modules
-CMD /ds-front/serve dist -l 8080
-CMD /ds-back/node dist/main
+# expose ports and run servers
+EXPOSE 8080 3000
+CMD serve /ds-front/dist -l 8080
+CMD node /ds-back/dist/main
