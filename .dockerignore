@@ -13,7 +13,5 @@ init-mongodb/
 # Environment
 .env
 .gitignore
-docker-compose.yml
-docker-compose.np.yml
 docker-compose_old.yml
 README.md
