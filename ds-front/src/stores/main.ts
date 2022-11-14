@@ -9,7 +9,6 @@ export const useMainStore = defineStore(
   "main",
   () => {
     const settings = reactive({
-      _id: "",
       colors: {
         topBarColor: "#333333",
         backgroundColor: "#111111",
