@@ -1,6 +1,6 @@
 #!/bin/bash
-cd /ds-front
+cd /ds-front || exit
 npm run build
-pm2 serve dist --port 8080 --name dreamscape
-cd /ds-back
+serve -s dist -l 8080
+cd /ds-back || exit
 node dist/main

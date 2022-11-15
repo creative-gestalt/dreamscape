@@ -1,19 +1,11 @@
-# Node
+# Project
 ds-front/node_modules/
 ds-back/node_modules/
-
-# Dist
 ds-front/dist/
 ds-back/dist/
-
-# DB
-data/
-init-mongodb/
 
 # Environment
 .env
 .gitignore
-docker-compose.v2.yml
 docker-compose.yml
-docker-compose_old.yml
 README.md
