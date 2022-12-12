@@ -38,7 +38,7 @@ const timeRef = ref(null as any);
 const computedDay = computed(() =>
   date.value
     ? new Date(date.value).toLocaleString("en-US", {
-        month: "short",
+        day: "numeric",
       })
     : ""
 );
