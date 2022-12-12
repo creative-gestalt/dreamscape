@@ -35,7 +35,6 @@ const timeRef = ref(null as any);
 const computedDay = computed(() =>
   date.value
     ? new Date(date.value).toLocaleString("en-US", {
-        month: "short",
         day: "numeric",
       })
     : ""
@@ -139,59 +138,56 @@ onMounted(() => {
             v-model="dream"
             ref="dreamRef"
             label="Dream"
-            rows="8"
+            rows="10"
             :messages="time"
             :color="settings.colors.textColor"
             density="compact"
           ></v-textarea>
-          <v-row class="mb-3 mt-0">
-            <v-col cols="12">
-              <v-btn
-                @click="addDream(dream)"
-                :color="settings.colors.backgroundColor"
-                :style="{ color: settings.colors.textColor }"
-                :block="true"
-              >
-                Add Dream
-              </v-btn>
-            </v-col>
-          </v-row>
-          <v-row class="mt-n7">
-            <v-col cols="6">
-              <v-date-picker
-                timezone="America/Boise"
-                v-model="date"
-                :max-date="max"
-                min-date="1950-01-01"
-                :popover="{ visibility: 'click' }"
-                :style="{
-                  borderColor: settings.colors.iconColor,
-                  backgroundColor: settings.colors.topBarColor,
-                }"
-                is-dark
-              >
-                <template v-slot="{ inputEvents }">
-                  <v-btn
-                    v-on="inputEvents"
-                    :color="settings.colors.backgroundColor"
-                    :style="{ color: settings.colors.textColor }"
-                    :block="true"
-                  >
-                    {{ computedDay }}
-                  </v-btn>
-                </template>
-              </v-date-picker>
-            </v-col>
-            <v-col class="pl-1" cols="6">
-              <v-btn
-                @click="timeModal = true"
-                :color="settings.colors.backgroundColor"
-                :style="{ color: settings.colors.textColor }"
-                :block="true"
-              >
-                <v-icon>mdi-clock-outline</v-icon>
-              </v-btn>
-            </v-col>
+          <v-row class="flex-nowrap mt-2" no-gutters>
+            <v-date-picker
+              timezone="America/Boise"
+              v-model="date"
+              :max-date="max"
+              min-date="1950-01-01"
+              :popover="{ visibility: 'click', placement: 'top' }"
+              :style="{
+                borderColor: settings.colors.iconColor,
+                backgroundColor: settings.colors.topBarColor,
+              }"
+              is-dark
+            >
+              <template v-slot="{ inputEvents }">
+                <v-btn
+                  class="mr-1"
+                  v-on="inputEvents"
+                  :color="settings.colors.backgroundColor"
+                  :style="{ color: settings.colors.textColor }"
+                  :icon="true"
+                  size="small"
+                >
+                  {{ computedDay }}
+                </v-btn>
+              </template>
+            </v-date-picker>
+            <v-btn
+              class="mr-1"
+              @click="timeModal = true"
+              :color="settings.colors.backgroundColor"
+              :style="{ color: settings.colors.textColor }"
+              :icon="true"
+              size="small"
+            >
+              <v-icon>mdi-clock-outline</v-icon>
+            </v-btn>
+            <v-btn
+              width="74%"
+              @click="addDream(dream)"
+              :color="settings.colors.backgroundColor"
+              :style="{ color: settings.colors.textColor }"
+              :rounded="true"
+            >
+              Add Dream
+            </v-btn>
           </v-row>
         </v-card>
         <v-card
@@ -238,7 +234,7 @@ onMounted(() => {
 
     <SnackBar
       :toggle="snackbar"
-      :timeout="timeout"
+      :timeout="100000"
       :snack-text="snackText"
       @closeSnackbar="snackbar = false"
     ></SnackBar>

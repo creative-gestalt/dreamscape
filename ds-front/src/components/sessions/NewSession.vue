@@ -39,7 +39,6 @@ const computedDay = computed(() =>
   date.value
     ? new Date(date.value).toLocaleString("en-US", {
         month: "short",
-        day: "numeric",
       })
     : ""
 );
@@ -151,54 +150,51 @@ onMounted(() => {
             density="compact"
           ></v-text-field>
 
-          <v-row class="mt-1">
-            <v-col cols="12">
-              <v-btn
-                @click="addQuestionsAnswers({ question, answer })"
-                :color="settings.colors.backgroundColor"
-                :style="{ color: settings.colors.textColor }"
-                :block="true"
-              >
-                Add Q&A
-              </v-btn>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="6">
-              <v-date-picker
-                timezone="America/Boise"
-                v-model="date"
-                :max-date="max"
-                min-date="1950-01-01"
-                :popover="{ visibility: 'click' }"
-                :style="{
-                  backgroundColor: settings.colors.backgroundColor,
-                  borderRadius: '10px',
-                }"
-                is-dark
-              >
-                <template v-slot="{ inputEvents }">
-                  <v-btn
-                    v-on="inputEvents"
-                    :color="settings.colors.backgroundColor"
-                    :style="{ color: settings.colors.textColor }"
-                    :block="true"
-                  >
-                    {{ computedDay }}
-                  </v-btn>
-                </template>
-              </v-date-picker>
-            </v-col>
-            <v-col class="pl-1" cols="6">
-              <v-btn
-                @click="timeModal = true"
-                :color="settings.colors.backgroundColor"
-                :style="{ color: settings.colors.textColor }"
-                :block="true"
-              >
-                <v-icon>mdi-clock-outline</v-icon>
-              </v-btn>
-            </v-col>
+          <v-row class="flex-nowrap mt-2" no-gutters>
+            <v-date-picker
+              timezone="America/Boise"
+              v-model="date"
+              :max-date="max"
+              min-date="1950-01-01"
+              :popover="{ visibility: 'click', placement: 'top' }"
+              :style="{
+                borderColor: settings.colors.iconColor,
+                backgroundColor: settings.colors.topBarColor,
+              }"
+              is-dark
+            >
+              <template v-slot="{ inputEvents }">
+                <v-btn
+                  class="mr-1"
+                  v-on="inputEvents"
+                  :color="settings.colors.backgroundColor"
+                  :style="{ color: settings.colors.textColor }"
+                  :icon="true"
+                  size="small"
+                >
+                  {{ computedDay }}
+                </v-btn>
+              </template>
+            </v-date-picker>
+            <v-btn
+              class="mr-1"
+              @click="timeModal = true"
+              :color="settings.colors.backgroundColor"
+              :style="{ color: settings.colors.textColor }"
+              :icon="true"
+              size="small"
+            >
+              <v-icon>mdi-clock-outline</v-icon>
+            </v-btn>
+            <v-btn
+              width="74%"
+              @click="addQuestionsAnswers({ question, answer })"
+              :color="settings.colors.backgroundColor"
+              :style="{ color: settings.colors.textColor }"
+              :rounded="true"
+            >
+              Add Q&A
+            </v-btn>
           </v-row>
         </v-card>
       </v-col>

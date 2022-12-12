@@ -7,6 +7,12 @@ const props = defineProps<{
 }>();
 </script>
 
+<style lang="scss">
+.v-snackbar__wrapper {
+  bottom: 75px !important;
+}
+</style>
+
 <template>
   <v-snackbar :model-value="props.toggle" :timeout="props.timeout" dark>
     {{ props.snackText }}
