@@ -234,7 +234,7 @@ onMounted(() => {
 
     <SnackBar
       :toggle="snackbar"
-      :timeout="100000"
+      :timeout="timeout"
       :snack-text="snackText"
       @closeSnackbar="snackbar = false"
     ></SnackBar>

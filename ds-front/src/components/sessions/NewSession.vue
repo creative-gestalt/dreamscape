@@ -57,8 +57,8 @@ function addQuestionsAnswers(qa: QA): void {
     answer.value = "";
     questionRef.value.focus();
   } else {
-    // snackText.value = "Session cannot be empty";
-    // snackbar.value = true;
+    snackText.value = "Session cannot be empty";
+    snackbar.value = true;
   }
 }
 async function completeSession(): Promise<void> {
