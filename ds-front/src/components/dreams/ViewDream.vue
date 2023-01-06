@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { computed, onBeforeMount, ref } from "vue";
+import { computed, onBeforeMount, onMounted, ref } from "vue";
 import { useMainStore } from "@/stores/main";
 import { useDreamStore } from "@/stores/dreams";
 import { storeToRefs } from "pinia";
 import { Dream, SubDream } from "@/interfaces/dream.interface";
 import { useDisplay } from "vuetify";
 import { useRoute, useRouter } from "vue-router";
+import { sleep } from "@/utils/constants";
 
 // router
 const router = useRouter();
@@ -66,6 +67,10 @@ function addSubDream(): void {
   const index = dream.value.dreams.length - 1;
   openEditArea(dream.value.dreams[index], index);
 }
+function cancelEdit(): void {
+  dream.value.dreams.pop();
+  editSheet.value = false;
+}
 function deleteSubDream(): void {
   dream.value.dreams.splice(selectedSubIndex.value, 1);
   editSheet.value = false;
@@ -114,160 +119,104 @@ onBeforeMount(async () => {
   dreamTime.value = dream.value.date.slice(11, 19);
   max.value = new Date().toISOString();
 });
+
+onMounted(async () => {
+  if (route.path.includes("add")) {
+    await sleep(500);
+    await addSubDream();
+  }
+});
 </script>
 
 <template>
   <v-container>
-    <v-btn
-      v-if="edit"
-      @click="addSubDream"
-      :color="settings.colors.completeBtnColor"
-      class="mb-16 mr-2"
-      location="right bottom"
-      position="absolute"
-      icon
-    >
-      +
-    </v-btn>
-    <v-card
-      class="ma-auto mb-16"
-      :color="settings.colors.iconColor"
-      max-width="800"
-      variant="outlined"
-      :style="{
-        minHeight: '75vh',
-        backgroundColor: settings.colors.topBarColor,
-      }"
-    >
-      <v-container class="pb-0 mb-n2">
+    <v-card class="mb-4">
+      <v-container>
         <v-row align="center" justify="center" no-gutters>
           <v-col cols="8">
-            <v-date-picker
-              timezone="America/Boise"
-              v-model="dream.date"
-              :max-date="max"
-              min-date="1950-01-01"
-              :popover="{ visibility: 'click' }"
-              :style="{
-                backgroundColor: settings.colors.topBarColor,
-                borderRadius: '10px',
-              }"
-              is-dark
-            >
-              <template v-slot="{ inputEvents }">
-                <v-btn
-                  v-on="inputEvents"
-                  :style="{ color: settings.colors.iconColor }"
-                  variant="outlined"
-                  :block="true"
-                >
-                  {{ computedDay }}
-                </v-btn>
-              </template>
-            </v-date-picker>
+            <v-btn-group density="compact" variant="outlined" divided>
+              <v-btn
+                :color="settings.colors.iconColor"
+                width="150"
+                density="compact"
+              >
+                {{ computedDay }}
+              </v-btn>
+              <v-btn @click="deleteDream" density="compact">
+                <v-icon color="red darken-4"> mdi-minus </v-icon>
+              </v-btn>
+            </v-btn-group>
           </v-col>
           <v-col cols="4" class="d-flex justify-end">
-            <v-fade-transition>
-              <v-icon
-                v-if="edit"
-                class="mr-3"
-                @click="edit = false"
-                color="orange"
-              >
-                mdi-window-close
-              </v-icon>
-              <v-icon
-                v-else
-                class="mr-3"
-                @click="edit = true"
-                :color="settings.colors.iconColor"
-              >
-                mdi-pencil
-              </v-icon>
-            </v-fade-transition>
-            <v-menu min-width="175" offset-x left>
-              <template #activator="{ props }">
-                <v-icon v-bind="props" :color="settings.colors.iconColor">
-                  mdi-menu
-                </v-icon>
-              </template>
-              <v-list :bg-color="settings.colors.backgroundColor">
-                <v-list-item link>
-                  <v-list-item-title @click="deleteDream" style="color: red">
-                    Delete
-                  </v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
+            <v-icon
+              class="mr-3"
+              @click="addSubDream"
+              :color="settings.colors.iconColor"
+            >
+              mdi-plus
+            </v-icon>
           </v-col>
         </v-row>
       </v-container>
-      <v-container>
-        <v-card
-          v-for="(dream, index) of dream.dreams"
-          :key="index"
-          class="py-4 my-5"
-          :color="settings.colors.iconColor"
-          variant="outlined"
-        >
-          <v-row align="center" justify="center">
-            <v-col cols="8">
-              <v-card-subtitle
-                class="text-left pb-3"
-                :style="{ color: settings.colors.textColor }"
-              >
-                Dream {{ index + 1 }} -
-                {{ dream.time ? dream.time : "No Time Set" }}
-              </v-card-subtitle>
-            </v-col>
-            <v-col cols="4">
-              <v-card-subtitle class="text-right pb-3">
-                <v-fab-transition hide-on-leave>
-                  <v-icon
-                    v-if="edit"
-                    @click="openEditArea(dream, index)"
-                    color="orange"
-                  >
-                    mdi-pencil
-                  </v-icon>
-                </v-fab-transition>
-              </v-card-subtitle>
-            </v-col>
-          </v-row>
+    </v-card>
+
+    <v-card
+      v-for="(dream, index) of dream.dreams"
+      :key="index"
+      class="py-4 my-5"
+      :color="settings.colors.topBarColor"
+    >
+      <v-row align="center" justify="center">
+        <v-col cols="8">
           <v-card-subtitle
-            class="text-left text-wrap"
+            class="text-left pb-3"
             :style="{ color: settings.colors.textColor }"
           >
-            {{ dream.subDream }}
+            Dream {{ index + 1 }} -
+            {{ dream.time ? dream.time : "No Time Set" }}
           </v-card-subtitle>
-        </v-card>
-      </v-container>
-      <v-card-subtitle>
-        <div :style="{ color: settings.colors.textColor }">keywords</div>
-        <v-divider class="pb-2"></v-divider>
-        <v-chip
-          v-for="(keyword, index) of dream.keywords"
-          :key="index"
-          class="ma-1"
-          :close="edit"
-          :style="{ color: settings.colors.textColor }"
-          @click:close="removeKeyword(keyword)"
-          outlined
-        >
-          {{ keyword }}
-        </v-chip>
-        <v-text-field
-          v-if="edit"
-          class="mb-n6"
-          v-model="keywords"
-          label="Keywords"
-          append-icon="mdi-check"
-          :color="settings.colors.textColor"
-          @click:append="addChip(keywords)"
-          @keyup.enter="addChip(keywords)"
-        ></v-text-field>
+        </v-col>
+        <v-col cols="4">
+          <v-card-subtitle class="text-right pb-3">
+            <v-icon @click="openEditArea(dream, index)" color="orange">
+              mdi-pencil
+            </v-icon>
+          </v-card-subtitle>
+        </v-col>
+      </v-row>
+      <v-card-subtitle
+        class="text-left text-wrap"
+        :style="{ color: settings.colors.textColor }"
+      >
+        {{ dream.subDream }}
       </v-card-subtitle>
     </v-card>
+
+    <v-card-subtitle>
+      <div :style="{ color: settings.colors.textColor }">keywords</div>
+      <v-divider class="pb-2"></v-divider>
+      <v-chip
+        v-for="(keyword, index) of dream.keywords"
+        :key="index"
+        class="ma-1"
+        :close="edit"
+        :style="{ color: settings.colors.textColor }"
+        @click:close="removeKeyword(keyword)"
+        outlined
+      >
+        {{ keyword }}
+      </v-chip>
+      <v-text-field
+        v-if="edit"
+        class="mb-n6"
+        v-model="keywords"
+        label="Keywords"
+        append-icon="mdi-check"
+        :color="settings.colors.textColor"
+        @click:append="addChip(keywords)"
+        @keyup.enter="addChip(keywords)"
+      ></v-text-field>
+    </v-card-subtitle>
 
     <v-slide-y-reverse-transition>
       <v-sheet
@@ -295,7 +244,7 @@ onBeforeMount(async () => {
                   <v-icon color="red darken-2">mdi-trash-can</v-icon>
                 </v-btn>
                 <v-btn
-                  @click="editSheet = false"
+                  @click="cancelEdit"
                   class="float-right"
                   color="transparent"
                   :flat="true"

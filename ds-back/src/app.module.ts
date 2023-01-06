@@ -3,15 +3,19 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { DreamsModule } from './dreamscape-dreams/dreams.module';
 import { SessionsModule } from './dreamscape-sessions/sessions.module';
 import { SettingsModule } from './dreamscape-settings/settings.module';
-
-// const url = 'mongodb://192.168.1.250';
-const url = process.env.MONGODB_CONNSTRING; // prod
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(`${url}/dreamscape`, {
-      useNewUrlParser: true,
-    }),
+    ConfigModule.forRoot({ envFilePath: '.env.development.local' }),
+    MongooseModule.forRoot(
+      `${
+        process.env.DEV_MONGODB_CONNSTRING || process.env.MONGODB_CONNSTRING
+      }/dreamscape`,
+      {
+        useNewUrlParser: true,
+      },
+    ),
     DreamsModule,
     SessionsModule,
     SettingsModule,

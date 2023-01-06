@@ -4,7 +4,6 @@
 package-lock.json
 
 # Logs
-logs
 *.log
 npm-debug.log*
 pnpm-debug.log*
@@ -36,4 +35,4 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # Env
-.env
+.env.development.local

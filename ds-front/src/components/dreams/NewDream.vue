@@ -16,10 +16,13 @@ const max = ref("");
 const dream = ref("");
 const keywords = ref("");
 const dreams = ref([] as SubDream[]);
+const todaysSubDreamCount = ref(0);
 const chips = ref([] as string[]);
 const timeout = 3000;
 const snackbar = ref(false);
 const snackText = ref("");
+const editSheet = ref(false);
+const tapDelete = ref(false);
 const timeModal = ref(false);
 const time = ref(
   new Date().toLocaleString("en-US", {
@@ -40,6 +43,15 @@ const computedDay = computed(() =>
     : ""
 );
 // methods
+function getTodaysSubDreamCount(): void {
+  const dreamDate = new Date(dreamStore.dreams[0].date).toLocaleDateString(
+    "en-US"
+  );
+  const todaysDate = new Date(date.value).toLocaleDateString("en-US");
+  if (dreamDate === todaysDate) {
+    todaysSubDreamCount.value = dreamStore.dreams[0].dreams.length;
+  }
+}
 function setNewTime(): void {
   time.value = String(timeRef.value.value);
   timeModal.value = false;
@@ -110,11 +122,36 @@ async function completeDream(): Promise<void> {
 
 onMounted(() => {
   date.value = max.value = new Date().toISOString();
+  getTodaysSubDreamCount();
 });
 </script>
 
 <template>
   <v-container>
+    <v-card v-if="todaysSubDreamCount > 0" class="pa-0 mb-2">
+      <v-card-text>
+        <v-row class="align-center" no-gutters>
+          <v-col cols="2">
+            <v-avatar :color="settings.colors.backgroundColor">{{
+              todaysSubDreamCount
+            }}</v-avatar>
+          </v-col>
+          <v-col cols="4">
+            <div>Dreams Today</div>
+          </v-col>
+          <v-col cols="6">
+            <v-btn
+              class="float-right"
+              :to="`/dream/${dreamStore.dreams[0]._id}/add`"
+              :color="settings.colors.textColor"
+              icon="mdi-plus"
+              variant="text"
+            >
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-card-text>
+    </v-card>
     <v-row class="text-center">
       <v-col cols="12">
         <v-card
@@ -258,6 +295,24 @@ onMounted(() => {
             Set
           </v-btn>
         </v-container>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="tapDelete" max-width="300">
+      <v-card :color="settings.colors.topBarColor">
+        <v-card-title>Delete</v-card-title>
+        <v-card-subtitle>Are you sure?</v-card-subtitle>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="tapDelete = false">Cancel</v-btn>
+          <v-btn
+            @click="deleteSubDream"
+            :style="{ color: settings.colors.textColor }"
+            :color="settings.colors.completeBtnColor"
+          >
+            Delete
+          </v-btn>
+        </v-card-actions>
       </v-card>
     </v-dialog>
   </v-container>

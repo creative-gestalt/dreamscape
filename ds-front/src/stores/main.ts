@@ -4,7 +4,6 @@ import { Colors, Settings } from "@/interfaces/settings.interface";
 import { sleep } from "@/utils/constants";
 import { server } from "@/utils/server";
 import axios from "axios";
-
 export const useMainStore = defineStore(
   "main",
   () => {

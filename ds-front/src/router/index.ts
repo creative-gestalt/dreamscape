@@ -28,7 +28,7 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/dream/:id",
+    path: "/dream/:id/:action",
     name: "ViewDreamPage",
     component: ViewDreamPage,
     meta: {

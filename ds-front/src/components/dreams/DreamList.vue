@@ -20,8 +20,8 @@ const { dreams, dreamsCount } = storeToRefs(dreamStore);
 // data
 const search = ref("");
 const currentPage = ref(1);
-const itemsPerPage = ref(8);
-const perPage = ref([8, 10, 15, 20]);
+const itemsPerPage = ref(10);
+const perPage = ref([10, 15, 20]);
 const headers = [{ name: "Date", visible: false }];
 // computed
 const compPages = computed(() =>
@@ -37,7 +37,7 @@ watch(search, async (newSearch) => {
 });
 // methods
 function handleClick(dream: Dream): void {
-  router.push(`/dream/${dream._id}`);
+  router.push(`/dream/${dream._id}/view`);
 }
 function formatDreamDate(date: string): string {
   return new Date(date).toLocaleString("en-US", {
@@ -66,11 +66,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-card
-    class="ma-2 ma-auto"
-    max-width="800"
-    :color="settings.colors.topBarColor"
-  >
+  <v-card class="ma-4" max-width="800" :color="settings.colors.topBarColor">
     <DataTable
       :items="dreams"
       :headers="headers"
