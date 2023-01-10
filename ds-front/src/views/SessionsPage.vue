@@ -28,26 +28,38 @@ onMounted(() => {
 <template>
   <v-fade-transition hide-on-leave>
     <div v-if="show">
-      <v-tabs
-        :model-value="tab"
-        @update:modelValue="handleTabs"
-        :color="settings.colors.textColor"
-        :bg-color="settings.colors.backgroundColor"
-        :grow="mobile"
-        fixed-tabs
-      >
-        <v-tab :value="0">new</v-tab>
-        <v-tab :value="1">all</v-tab>
-      </v-tabs>
+      <div v-if="mobile">
+        <v-tabs
+          :model-value="tab"
+          @update:modelValue="handleTabs"
+          :color="settings.colors.textColor"
+          :bg-color="settings.colors.backgroundColor"
+          :grow="mobile"
+          fixed-tabs
+        >
+          <v-tab :value="0">new</v-tab>
+          <v-tab :value="1">all</v-tab>
+        </v-tabs>
 
-      <v-window v-model="tab">
-        <v-window-item :value="0">
-          <NewSession />
-        </v-window-item>
-        <v-window-item :value="1">
-          <SessionList />
-        </v-window-item>
-      </v-window>
+        <v-window v-model="tab">
+          <v-window-item :value="0">
+            <NewSession />
+          </v-window-item>
+          <v-window-item :value="1">
+            <SessionList />
+          </v-window-item>
+        </v-window>
+      </div>
+      <v-container v-else>
+        <v-row>
+          <v-col cols="6">
+            <NewSession />
+          </v-col>
+          <v-col cols="6">
+            <SessionList />
+          </v-col>
+        </v-row>
+      </v-container>
     </div>
   </v-fade-transition>
 </template>
