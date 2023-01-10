@@ -39,7 +39,7 @@ function formatSessionDate(date: string): string {
 <template>
   <v-card
     v-if="sessions && sessions.length > 0"
-    class="ma-2 mt-4 ma-auto"
+    class="mx-4 mt-4 ma-auto"
     max-width="800"
     :color="settings.colors.topBarColor"
   >

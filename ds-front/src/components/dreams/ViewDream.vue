@@ -7,6 +7,7 @@ import { Dream, SubDream } from "@/interfaces/dream.interface";
 import { useDisplay } from "vuetify";
 import { useRoute, useRouter } from "vue-router";
 import { sleep } from "@/utils/constants";
+import ViewActions from "@/components/shared/ViewActions.vue";
 
 // router
 const router = useRouter();
@@ -130,40 +131,20 @@ onMounted(async () => {
 
 <template>
   <v-container>
-    <v-card class="mb-4">
-      <v-container>
-        <v-row align="center" justify="center" no-gutters>
-          <v-col cols="8">
-            <v-btn-group density="compact" variant="outlined" divided>
-              <v-btn
-                :color="settings.colors.iconColor"
-                width="150"
-                density="compact"
-              >
-                {{ computedDay }}
-              </v-btn>
-              <v-btn @click="deleteDream" density="compact">
-                <v-icon color="red darken-4"> mdi-minus </v-icon>
-              </v-btn>
-            </v-btn-group>
-          </v-col>
-          <v-col cols="4" class="d-flex justify-end">
-            <v-icon
-              class="mr-3"
-              @click="addSubDream"
-              :color="settings.colors.iconColor"
-            >
-              mdi-plus
-            </v-icon>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-card>
+    <view-actions
+      class="mb-4"
+      :day="computedDay"
+      :delete-function="deleteDream"
+      :action-function="addSubDream"
+      :action-icon="'mdi-plus'"
+    >
+    </view-actions>
 
     <v-card
       v-for="(dream, index) of dream.dreams"
       :key="index"
-      class="py-4 my-5"
+      class="ma-auto py-4 my-5"
+      max-width="800"
       :color="settings.colors.topBarColor"
     >
       <v-row align="center" justify="center">
@@ -192,31 +173,33 @@ onMounted(async () => {
       </v-card-subtitle>
     </v-card>
 
-    <v-card-subtitle>
-      <div :style="{ color: settings.colors.textColor }">keywords</div>
-      <v-divider class="pb-2"></v-divider>
-      <v-chip
-        v-for="(keyword, index) of dream.keywords"
-        :key="index"
-        class="ma-1"
-        :close="edit"
-        :style="{ color: settings.colors.textColor }"
-        @click:close="removeKeyword(keyword)"
-        outlined
-      >
-        {{ keyword }}
-      </v-chip>
-      <v-text-field
-        v-if="edit"
-        class="mb-n6"
-        v-model="keywords"
-        label="Keywords"
-        append-icon="mdi-check"
-        :color="settings.colors.textColor"
-        @click:append="addChip(keywords)"
-        @keyup.enter="addChip(keywords)"
-      ></v-text-field>
-    </v-card-subtitle>
+    <v-card class="ma-auto" max-width="800" color="transparent">
+      <v-card-subtitle>
+        <div :style="{ color: settings.colors.textColor }">keywords</div>
+        <v-divider class="pb-2"></v-divider>
+        <v-chip
+          v-for="(keyword, index) of dream.keywords"
+          :key="index"
+          class="ma-1"
+          :close="edit"
+          :style="{ color: settings.colors.textColor }"
+          @click:close="removeKeyword(keyword)"
+          outlined
+        >
+          {{ keyword }}
+        </v-chip>
+        <v-text-field
+          v-if="edit"
+          class="mb-n6"
+          v-model="keywords"
+          label="Keywords"
+          append-icon="mdi-check"
+          :color="settings.colors.textColor"
+          @click:append="addChip(keywords)"
+          @keyup.enter="addChip(keywords)"
+        ></v-text-field>
+      </v-card-subtitle>
+    </v-card>
 
     <v-slide-y-reverse-transition>
       <v-sheet

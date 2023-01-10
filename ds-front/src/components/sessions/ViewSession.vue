@@ -6,6 +6,7 @@ import { storeToRefs } from "pinia";
 import { useDisplay } from "vuetify";
 import { useRoute, useRouter } from "vue-router";
 import { Session } from "@/interfaces/session.interface";
+import ViewActions from "@/components/shared/ViewActions.vue";
 
 // router
 const router = useRouter();
@@ -54,9 +55,15 @@ async function submitSession(): Promise<void> {
   await getAllSessions();
 }
 async function deleteSession(): Promise<void> {
-  await deleteSessions([session.value]);
-  await getAllSessions();
-  await router.push("/sessions");
+  const answer = confirm("Are you sure?");
+  if (answer) {
+    await deleteSessions([session.value]);
+    await getAllSessions();
+    await router.push("/sessions");
+  }
+}
+async function openEditSheet(): Promise<void> {
+  editSheet.value = true;
 }
 onBeforeMount(async () => {
   id.value = String(route.params.id);
@@ -68,75 +75,29 @@ onBeforeMount(async () => {
 
 <template>
   <v-container>
+    <view-actions
+      class="mb-4"
+      :day="computedDay"
+      :delete-function="deleteSession"
+      :action-function="openEditSheet"
+      :action-icon="'mdi-pencil'"
+    >
+    </view-actions>
+
     <v-card
       class="ma-auto mb-16"
       :color="settings.colors.iconColor"
       max-width="800"
-      variant="outlined"
       :style="{
         minHeight: '75vh',
         backgroundColor: settings.colors.topBarColor,
       }"
     >
-      <v-container class="pb-0 mb-n2">
-        <v-row>
-          <v-col cols="10">
-            <v-date-picker
-              timezone="America/Boise"
-              v-model="session.date"
-              :max-date="max"
-              min-date="1950-01-01"
-              :popover="{ visibility: 'click' }"
-              :style="{
-                backgroundColor: settings.colors.topBarColor,
-                borderRadius: '10px',
-              }"
-              is-dark
-            >
-              <template v-slot="{ inputEvents }">
-                <v-btn
-                  v-on="inputEvents"
-                  :style="{ color: settings.colors.iconColor }"
-                  variant="outlined"
-                  :block="true"
-                >
-                  {{ computedDay }}
-                </v-btn>
-              </template>
-            </v-date-picker>
-          </v-col>
-          <v-col cols="2" class="d-flex justify-end">
-            <v-menu min-width="175" offset-x left>
-              <template #activator="{ props }">
-                <v-btn v-bind="props" color="transparent" variant="flat">
-                  <v-icon :color="settings.colors.iconColor"> mdi-menu </v-icon>
-                </v-btn>
-              </template>
-              <v-list :bg-color="settings.colors.backgroundColor">
-                <v-list-item link>
-                  <v-list-item-title @click="editSheet = true">
-                    Edit
-                  </v-list-item-title>
-                </v-list-item>
-                <v-list-item link>
-                  <v-list-item-title @click="deleteSession" style="color: red">
-                    Delete
-                  </v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </v-col>
-        </v-row>
-      </v-container>
       <v-container v-if="session.session">
-        <v-card
-          class="my-5"
-          :border="settings.colors.backgroundColor"
-          variant="outlined"
-        >
+        <v-card :border="settings.colors.backgroundColor">
           <v-card-subtitle
-            class="text-left pa-2"
-            :style="{ color: settings.colors.textColor }"
+            class="text-left pa-2 pb-4"
+            :style="{ color: settings.colors.textColor, fontSize: '22px' }"
           >
             {{ `${session.session.entity} - ${session.session.time}` }}
           </v-card-subtitle>
