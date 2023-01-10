@@ -38,7 +38,7 @@ const localDreamDates = computed(() => {
 
 function openDreamView(day: any): void {
   if (day.attributes[0]) {
-    router.push(`/dream/${day.attributes[0].key}`);
+    router.push(`/dream/${day.attributes[0].key}/view`);
   }
 }
 function getNewDreamDates(): void {
