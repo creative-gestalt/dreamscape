@@ -22,7 +22,7 @@ export default defineConfig({
       manifest: {
         name: "Dreamscape",
         short_name: "Dreamscape",
-        description: "My Awesome App description",
+        description: "Tracker for dreams and QA sessions.",
         theme_color: "#00000000",
         icons: [
           {

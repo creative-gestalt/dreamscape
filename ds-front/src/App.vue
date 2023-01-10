@@ -82,9 +82,9 @@ onMounted(async () => {
       :bg-color="settings.colors.topBarColor"
       :grow="true"
       class="pb-3"
-      density="compact"
       height="80"
       mode="shift"
+      mandatory
     >
       <v-btn :color="settings.colors.topBarColor" value="0" to="/dreams">
         <span :style="{ color: settings.colors.iconColor }"> Dreams </span>
