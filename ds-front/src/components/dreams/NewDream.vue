@@ -128,8 +128,13 @@ onMounted(() => {
 
 <template>
   <v-container>
-    <v-card v-if="todaysSubDreamCount > 0" class="pa-0 mb-2">
-      <v-card-text>
+    <v-card
+      v-if="todaysSubDreamCount > 0"
+      class="pa-0 mb-2"
+      :color="settings.colors.topBarColor"
+      density="compact"
+    >
+      <v-card-text class="my-n2">
         <v-row class="align-center" no-gutters>
           <v-col cols="2">
             <v-avatar :color="settings.colors.backgroundColor">{{
