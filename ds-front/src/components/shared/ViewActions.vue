@@ -16,7 +16,7 @@ const { settings } = storeToRefs(mainStore);
 <style lang="scss"></style>
 
 <template>
-  <v-card class="ma-auto" max-width="800">
+  <v-card class="ma-auto" max-width="800" :color="settings.colors.topBarColor">
     <v-container>
       <v-row align="center" justify="center" no-gutters>
         <v-col cols="8">
