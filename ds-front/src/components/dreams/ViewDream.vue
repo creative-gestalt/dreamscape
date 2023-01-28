@@ -1,22 +1,21 @@
 <script lang="ts" setup>
 import { computed, onBeforeMount, onMounted, ref } from "vue";
 import { useMainStore } from "@/stores/main";
-import { useDreamStore } from "@/stores/dreams";
 import { storeToRefs } from "pinia";
 import { Dream, SubDream } from "@/interfaces/dream.interface";
 import { useDisplay } from "vuetify";
 import { useRoute, useRouter } from "vue-router";
 import { sleep } from "@/utils/constants";
 import ViewActions from "@/components/shared/ViewActions.vue";
+import axios from "axios";
+import { server } from "@/utils/server";
 
 // router
 const router = useRouter();
 const route = useRoute();
 //stores
 const mainStore = useMainStore();
-const dreamStore = useDreamStore();
 const { settings } = storeToRefs(mainStore);
-const { getDream, updateDream, getDreamsForPage, deleteDreams } = dreamStore;
 // data
 const mobile = useDisplay().xs.value;
 const id = ref("");
@@ -46,6 +45,20 @@ const computedDay = computed(() =>
     : ""
 );
 // methods
+async function getDream(payload: Dream): Promise<Dream> {
+  return await axios
+    .get(`${server.baseURL}/getDream/${payload._id}`)
+    .then((result) => result.data);
+}
+async function updateDream(payload: Dream): Promise<void> {
+  return await axios.put(
+    `${server.baseURL}/updateDream?dreamID=${payload._id}`,
+    payload
+  );
+}
+async function deleteDreams(payload: Dream[]): Promise<void> {
+  await axios.post(`${server.baseURL}/deleteDreams`, payload);
+}
 function updateSubDream(): void {
   dream.value.dreams[selectedSubIndex.value].subDream =
     selectedSubDream.value.subDream;
@@ -97,19 +110,11 @@ async function submitDream(): Promise<void> {
     dreams: dream.value.dreams,
     keywords: dream.value.keywords.length > 0 ? dream.value.keywords : [],
   });
-  await getDreamsForPage({
-    skip: 0,
-    limit: 13,
-  });
 }
 async function deleteDream(): Promise<void> {
   const answer = confirm("Are you sure?");
   if (answer) {
     await deleteDreams([dream.value]);
-    await getDreamsForPage({
-      skip: 0,
-      limit: 13,
-    });
     await router.push("/dreams");
   }
 }

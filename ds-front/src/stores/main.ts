@@ -17,6 +17,7 @@ export const useMainStore = defineStore(
       },
     } as Settings);
     const loading = ref(false);
+    const refreshDreamList = ref(0);
 
     function mstDate(): string {
       const now = new Date();
@@ -64,6 +65,7 @@ export const useMainStore = defineStore(
     return {
       settings,
       loading,
+      refreshDreamList,
       mstDate,
       reset,
       getSettings,

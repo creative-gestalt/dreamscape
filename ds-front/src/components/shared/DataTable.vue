@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onBeforeMount, ref } from "vue";
+import { computed, onBeforeMount, ref, watch } from "vue";
 
 // eslint-disable-next-line no-undef
 const props = defineProps<{
@@ -26,6 +26,13 @@ function check(): void {
     }
   }
 }
+
+watch(
+  () => props.items,
+  () => {
+    check();
+  }
+);
 
 onBeforeMount(() => {
   check();

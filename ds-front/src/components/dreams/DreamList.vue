@@ -1,39 +1,46 @@
 <script lang="ts" setup>
 import DataTable from "@/components/shared/DataTable.vue";
-import { useMainStore } from "@/stores/main";
-import { useDreamStore } from "@/stores/dreams";
-import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
+import { useDreamStore } from "@/stores/dreams";
+import { useMainStore } from "@/stores/main";
+import { storeToRefs } from "pinia";
 import { Dream } from "@/interfaces/dream.interface";
 import { sleep } from "@/utils/constants";
 import { useRouter } from "vue-router";
+import { server } from "@/utils/server";
+import axios from "axios";
 
 // router
 const router = useRouter();
 // stores
-const mainStore = useMainStore();
 const dreamStore = useDreamStore();
-const { settings } = storeToRefs(mainStore);
+const { setTodaysDream } = dreamStore;
+const mainStore = useMainStore();
+const { settings, refreshDreamList } = storeToRefs(mainStore);
 const { updateLoading } = mainStore;
-const { getDreamsForPage, searchDreams } = dreamStore;
-const { dreams, dreamsCount } = storeToRefs(dreamStore);
 // data
+const dreams = ref([] as Dream[]);
+const dreamsCount = ref(0);
 const search = ref("");
 const currentPage = ref(1);
 const itemsPerPage = ref(10);
 const perPage = ref([10, 15, 20]);
 const headers = [{ name: "Date", visible: false }];
 // computed
+const computedDreams = computed(() => dreams.value);
 const compPages = computed(() =>
   Math.ceil(dreamsCount.value / itemsPerPage.value)
 );
-// watcher
+// watchers
 watch(search, async (newSearch) => {
   if (newSearch) {
     await searchDreams(newSearch);
   } else {
     await dreamsForPage(1);
   }
+});
+watch(refreshDreamList, () => {
+  dreamsForPage(1);
 });
 // methods
 function handleClick(dream: Dream): void {
@@ -51,16 +58,28 @@ async function dreamsForPage(pageNumber: number): Promise<void> {
   await sleep(250);
   currentPage.value = pageNumber;
   const skip = (pageNumber - 1) * itemsPerPage.value;
-  await getDreamsForPage({
-    skip,
-    limit: itemsPerPage.value,
-  });
+  await axios
+    .get(`${server.baseURL}/getDreams/${skip}-${itemsPerPage.value}`)
+    .then((data) => {
+      dreams.value = data.data.dreams;
+      dreamsCount.value = data.data.count;
+    });
   await updateLoading(false);
+}
+
+async function searchDreams(payload: string): Promise<void> {
+  await axios
+    .get(`${server.baseURL}/searchDreams?target=${payload}`)
+    .then((result) => {
+      dreamsCount.value = result.data.count;
+      dreams.value = result.data.dreams;
+    });
 }
 
 onMounted(async () => {
   if (dreamsCount.value === 0) {
     await dreamsForPage(1);
+    await setTodaysDream(dreams.value[0]);
   }
 });
 </script>
@@ -68,7 +87,7 @@ onMounted(async () => {
 <template>
   <v-card class="ma-4" max-width="800" :color="settings.colors.topBarColor">
     <DataTable
-      :items="dreams"
+      :items="computedDreams"
       :headers="headers"
       :items-per-page="itemsPerPage"
       @click:row="handleClick"

@@ -38,7 +38,8 @@ export class DreamController {
     const skip = Number(params.split('-')[0]);
     const limit = Number(params.split('-')[1]);
     const dreams = await this.dreamsService.getDreams(skip, limit);
-    return res.status(HttpStatus.OK).json(dreams);
+    const count = await this.dreamsService.getDreamsCount();
+    return res.status(HttpStatus.OK).json({ dreams, count });
   }
 
   @Get('getDream/:dreamID')

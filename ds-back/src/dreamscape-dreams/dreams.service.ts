@@ -19,6 +19,11 @@ export class DreamsService {
       .exec();
   }
 
+  async getDreamsCount(): Promise<number> {
+    const dates = await this.getField('date');
+    return dates.length;
+  }
+
   async getDreamsByFieldValue(
     field: string,
     value: any,

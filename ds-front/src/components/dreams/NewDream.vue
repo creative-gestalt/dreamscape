@@ -5,11 +5,14 @@ import { useDreamStore } from "@/stores/dreams";
 import { storeToRefs } from "pinia";
 import { SubDream } from "@/interfaces/dream.interface";
 import SnackBar from "@/components/shared/SnackBar.vue";
+import axios from "axios";
+import { server } from "@/utils/server";
 
 // stores
-const mainStore = useMainStore();
 const dreamStore = useDreamStore();
-const { settings } = storeToRefs(mainStore);
+const { todaysDream } = storeToRefs(dreamStore);
+const mainStore = useMainStore();
+const { settings, refreshDreamList } = storeToRefs(mainStore);
 // data
 const date = ref("");
 const max = ref("");
@@ -21,7 +24,6 @@ const chips = ref([] as string[]);
 const timeout = 3000;
 const snackbar = ref(false);
 const snackText = ref("");
-const editSheet = ref(false);
 const tapDelete = ref(false);
 const timeModal = ref(false);
 const time = ref(
@@ -44,12 +46,12 @@ const computedDay = computed(() =>
 );
 // methods
 function getTodaysSubDreamCount(): void {
-  const dreamDate = new Date(dreamStore.dreams[0].date).toLocaleDateString(
+  const dreamDate = new Date(todaysDream.value.date).toLocaleDateString(
     "en-US"
   );
   const todaysDate = new Date(date.value).toLocaleDateString("en-US");
   if (dreamDate === todaysDate) {
-    todaysSubDreamCount.value = dreamStore.dreams[0].dreams.length;
+    todaysSubDreamCount.value = todaysDream.value.dreams.length;
   }
 }
 function setNewTime(): void {
@@ -94,7 +96,7 @@ async function completeDream(): Promise<void> {
   await mainStore.updateLoading(true);
   if (dream.value.length > 0) addDream(dream.value, false);
   if (date.value && dreams.value.length > 0) {
-    await dreamStore.addDream({
+    await axios.post(`${server.baseURL}/addDream`, {
       date: date.value,
       dreams: dreams.value,
       keywords:
@@ -104,10 +106,7 @@ async function completeDream(): Promise<void> {
           ? [keywords.value]
           : [],
     });
-    await dreamStore.getDreamsForPage({
-      skip: 0,
-      limit: 13,
-    });
+    refreshDreamList.value++;
     dream.value = "";
     dreams.value = [] as SubDream[];
     keywords.value = "";
@@ -147,7 +146,7 @@ onMounted(() => {
           <v-col cols="6">
             <v-btn
               class="float-right"
-              :to="`/dream/${dreamStore.dreams[0]._id}/add`"
+              :to="`/dream/${todaysDream._id}/add`"
               :color="settings.colors.textColor"
               icon="mdi-plus"
               variant="text"

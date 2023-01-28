@@ -5,9 +5,9 @@
 */
 
 job("Deploy") {
-	container("Start Deployment", image = "gradle:6.1.1-jre11") {
-		kotlinScript { api ->
-			// create and start deployment
+    container("Start Deployment", image = "gradle:6.1.1-jre11") {
+		    kotlinScript { api ->
+            // create and start deployment
             api.space().projects.automation.deployments.start(
                 project = api.projectIdentifier(),
                 targetIdentifier = TargetIdentifier.Key("production-image"),
@@ -52,4 +52,3 @@ job("Deploy") {
         }
     }
 }
-

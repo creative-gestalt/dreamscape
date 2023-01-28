@@ -11,7 +11,7 @@ const dreamStore = useDreamStore();
 const sessionStore = useSessionStore();
 const { loading, settings } = storeToRefs(mainStore);
 const { getSettings } = mainStore;
-const { getDreamsForPage, getDreamDates, getDreamsCount } = dreamStore;
+const { getDreamDates } = dreamStore;
 const { getAllSessions } = sessionStore;
 
 const mobile = useDisplay().xs.value;
@@ -19,11 +19,7 @@ const selectedNav = ref("0");
 
 onMounted(async () => {
   await getSettings();
-  await getDreamsForPage({
-    skip: 0,
-    limit: 13,
-  });
-  await getDreamsCount();
+  // await getDreamsCount();
   await getDreamDates(new Date().getFullYear().toString());
   await getAllSessions();
 });
