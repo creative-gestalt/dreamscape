@@ -5,6 +5,15 @@
 */
 
 job("Deploy") {
+    // run on commit to a branch containing "main"
+    startOn {
+        gitPush {
+            branchFilter {
+                +Regex("main")
+            }
+        }
+    }
+
     container("Start Deployment", image = "gradle:6.1.1-jre11") {
 		    kotlinScript { api ->
             // create and start deployment
@@ -36,7 +45,6 @@ job("Deploy") {
             val dockerHub = "creativegestalt/dreamscape"
             // image tags for 'docker push'
             tags {
-                +"$dockerHub:1.0.${"$"}JB_SPACE_EXECUTION_NUMBER"
                 +"$dockerHub:latest"
             }
         }

@@ -5,8 +5,6 @@ RUN mkdir /home/node/ds-front && mkdir /home/node/ds-back
 COPY ./ds-front/package.json /home/node/ds-front
 COPY ./ds-back/package.json /home/node/ds-back
 
-# install yarn because it's better
-RUN npm i -g yarn
 # install, copy, build frontend
 RUN cd /home/node/ds-front && yarn
 COPY ./ds-front /home/node/ds-front

@@ -39,6 +39,7 @@ watch(search, async (newSearch) => {
     await dreamsForPage(1);
   }
 });
+
 watch(refreshDreamList, () => {
   dreamsForPage(1);
 });
