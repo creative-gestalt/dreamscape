@@ -9,7 +9,7 @@ job("Deploy") {
     startOn {
         gitPush {
             branchFilter {
-                +Regex("main")
+                +"refs/heads/main"
             }
         }
     }
