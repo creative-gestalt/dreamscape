@@ -1,5 +1,5 @@
 FROM node:lts-alpine as build-stage
-# make app directores
+# make app directories
 RUN mkdir /home/node/ds-front && mkdir /home/node/ds-back
 # copy package.json files for install
 COPY ./ds-front/package.json /home/node/ds-front

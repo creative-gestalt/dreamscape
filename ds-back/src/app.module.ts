@@ -9,9 +9,7 @@ import { ConfigModule } from '@nestjs/config';
   imports: [
     ConfigModule.forRoot({ envFilePath: '.env.development.local' }),
     MongooseModule.forRoot(
-      `${
-        process.env.DEV_MONGODB_CONNSTRING || process.env.MONGODB_CONNSTRING
-      }/dreamscape`,
+      process.env.DEV_MONGODB_CONNSTRING || process.env.MONGODB_CONNSTRING,
       {
         useNewUrlParser: true,
       },
