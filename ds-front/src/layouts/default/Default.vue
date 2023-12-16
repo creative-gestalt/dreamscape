@@ -119,7 +119,12 @@ onMounted(async () => {
     <default-view />
 
     <v-bottom-navigation
-      v-if="mobile"
+      v-if="
+        (mobile && route.path.includes('/new-dream')) ||
+        route.path.includes('/dreams') ||
+        route.path.includes('/new-session') ||
+        route.path.includes('/sessions')
+      "
       :model-value="selectedNav"
       bg-color="black"
       height="100"
@@ -133,11 +138,9 @@ onMounted(async () => {
       >
         <v-btn value="0" to="/new-dream">
           <v-icon :color="settings.colors.iconColor">mdi-plus</v-icon>
-          <span :style="{ color: settings.colors.iconColor }">Add</span>
         </v-btn>
         <v-btn value="1" to="/dreams">
           <v-icon :color="settings.colors.iconColor">mdi-sleep</v-icon>
-          <span :style="{ color: settings.colors.iconColor }">Dreams</span>
         </v-btn>
       </div>
       <div
@@ -150,14 +153,18 @@ onMounted(async () => {
           <v-icon :color="settings.colors.iconColor">
             mdi-wallet-plus-outline
           </v-icon>
-          <span :style="{ color: settings.colors.iconColor }">Add</span>
         </v-btn>
         <v-btn value="3" to="/sessions">
           <v-icon :color="settings.colors.iconColor">mdi-keyboard</v-icon>
-          <span :style="{ color: settings.colors.iconColor }">Sessions</span>
         </v-btn>
       </div>
     </v-bottom-navigation>
+
+    <v-footer color="black" app>
+      <span :style="{ color: settings.colors.textColor, opacity: 0.35 }">
+        v2.0.0
+      </span>
+    </v-footer>
   </v-app>
 </template>
 

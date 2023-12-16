@@ -11,9 +11,9 @@ export const useMainStore = defineStore(
       colors: {
         // topBarColor: "#222222",
         // backgroundColor: "#111111",
-        iconColor: "#000000",
-        textColor: "#fff",
-        completeBtnColor: "#007707",
+        iconColor: "#00bcd4",
+        textColor: "#e91e63",
+        completeBtnColor: "#9c27b0",
       },
     } as Settings);
     const loading = ref(false);
@@ -29,10 +29,13 @@ export const useMainStore = defineStore(
       settings.colors = {
         // topBarColor: "#222222",
         // backgroundColor: "#111111",
-        iconColor: "#000000",
-        textColor: "#fff",
-        completeBtnColor: "#007707",
+        iconColor: "#00bcd4",
+        textColor: "#e91e63",
+        completeBtnColor: "#9c27b0",
       } as Colors;
+      await updateSettings("iconColor", "#00bcd4");
+      await updateSettings("textColor", "#e91e63");
+      await updateSettings("completeBtnColor", "#9c27b0");
     }
     async function getSettings(): Promise<void> {
       const result = (await axios.get(`${server.baseURL}/getSettings`)).data;
