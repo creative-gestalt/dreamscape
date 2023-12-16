@@ -13,7 +13,7 @@ defineEmits(["click:row"]);
 
 const show = ref(false);
 const items = computed(() =>
-  props.items.length > 0 ? [...props.items].splice(0, props.itemsPerPage) : []
+  props.items.length > 0 ? [...props.items].splice(0, props.itemsPerPage) : [],
 );
 
 function check(): void {
@@ -31,7 +31,7 @@ watch(
   () => props.items,
   () => {
     check();
-  }
+  },
 );
 
 onBeforeMount(() => {
@@ -40,8 +40,8 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <v-container v-if="items.length > 0" class="mx-0 pa-0">
-    <v-table :style="{ backgroundColor: bgColor }">
+  <v-container v-if="items.length > 0" class="pa-0">
+    <v-table :style="{ backgroundColor: 'transparent' }">
       <slot name="search"></slot>
       <thead>
         <tr v-for="(header, index) in props.headers" :key="index">

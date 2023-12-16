@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from "vue";
-import { useMainStore } from "@/stores/main";
-import { useDreamStore } from "@/stores/dreams";
+import { useMainStore } from "@/store/main";
+import { useDreamStore } from "@/store/dreams";
 import { storeToRefs } from "pinia";
 import { DreamDate } from "@/interfaces/dream.interface";
 import { useRouter } from "vue-router";
+import { useDisplay } from "vuetify";
 
 // router
 const router = useRouter();
@@ -17,6 +18,7 @@ const { mstDate } = mainStore;
 const { getDreamDates } = dreamStore;
 // data
 const selectedYear = ref("");
+const mobile = useDisplay().xs.value;
 
 // computed
 const localDreamDates = computed(() => {
@@ -47,6 +49,7 @@ function getNewDreamDates(): void {
 
 onMounted(() => {
   selectedYear.value = mstDate().slice(0, 4);
+  console.log(years.value);
 });
 </script>
 
@@ -54,11 +57,7 @@ onMounted(() => {
   <v-container>
     <v-row>
       <v-col>
-        <v-sheet
-          class="ma-auto mb-3"
-          :color="settings.colors.topBarColor"
-          rounded
-        >
+        <v-sheet class="ma-auto mb-3" color="black" rounded>
           <v-slide-group :model-value="selectedYear" show-arrows>
             <v-slide-group-item
               #="{ isSelected }"
@@ -75,7 +74,7 @@ onMounted(() => {
                 :color="
                   isSelected
                     ? settings.colors.completeBtnColor
-                    : settings.colors.topBarColor
+                    : settings.colors.iconColor
                 "
                 >{{ year }}
               </v-btn>
@@ -87,14 +86,14 @@ onMounted(() => {
     <v-calendar
       @dayclick="openDreamView"
       :from-page="{ month: new Date().getMonth() + 1, year: selectedYear }"
-      :columns="$screens({ lg: 4 }, 1)"
-      :rows="$screens({ lg: 3 }, 2)"
+      :columns="mobile ? 1 : 4"
+      :rows="mobile ? 2 : 3"
       :attributes="localDreamDates"
       :style="{
         borderColor: settings.colors.iconColor,
-        backgroundColor: settings.colors.topBarColor,
+        backgroundColor: '#000000',
       }"
-      is-expanded
+      expanded
       is-dark
     >
     </v-calendar>

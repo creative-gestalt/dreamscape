@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, onBeforeMount, onMounted, ref } from "vue";
-import { useMainStore } from "@/stores/main";
+import { useMainStore } from "@/store/main";
 import { storeToRefs } from "pinia";
 import { Dream, SubDream } from "@/interfaces/dream.interface";
 import { useDisplay } from "vuetify";
@@ -23,9 +23,10 @@ const dream = ref({} as Dream);
 const dreamTime = ref("");
 const keywords = ref("");
 const edit = ref(false);
-const max = ref("");
+const max = ref({} as Date);
 const selectedSubIndex = ref(0);
 const selectedSubDream = ref({} as SubDream);
+const addDream = ref(false);
 const editSheet = ref(false);
 const tapDelete = ref(false);
 const time = ref(
@@ -33,7 +34,7 @@ const time = ref(
     hour: "numeric",
     minute: "numeric",
     hour12: true,
-  })
+  }),
 );
 // computed
 const computedDay = computed(() =>
@@ -42,7 +43,7 @@ const computedDay = computed(() =>
         month: "short",
         day: "numeric",
       })
-    : ""
+    : "",
 );
 // methods
 async function getDream(payload: Dream): Promise<Dream> {
@@ -53,7 +54,7 @@ async function getDream(payload: Dream): Promise<Dream> {
 async function updateDream(payload: Dream): Promise<void> {
   return await axios.put(
     `${server.baseURL}/updateDream?dreamID=${payload._id}`,
-    payload
+    payload,
   );
 }
 async function deleteDreams(payload: Dream[]): Promise<void> {
@@ -72,6 +73,7 @@ function openEditArea(subDream: SubDream, index: number): void {
   editSheet.value = true;
 }
 function addSubDream(): void {
+  addDream.value = true;
   dream.value.dreams.push({ subDream: "", time: time.value });
   time.value = new Date().toLocaleString("en-US", {
     hour: "numeric",
@@ -82,7 +84,10 @@ function addSubDream(): void {
   openEditArea(dream.value.dreams[index], index);
 }
 function cancelEdit(): void {
-  dream.value.dreams.pop();
+  if (addDream.value) {
+    dream.value.dreams.pop();
+    addDream.value = false;
+  }
   editSheet.value = false;
 }
 function deleteSubDream(): void {
@@ -121,15 +126,15 @@ async function deleteDream(): Promise<void> {
 
 onBeforeMount(async () => {
   id.value = String(route.params.id);
-  dream.value = await getDream({ _id: id.value } as Dream);
+  dream.value = (await getDream({ _id: id.value } as Dream)) as Dream;
   dreamTime.value = dream.value.date.slice(11, 19);
-  max.value = new Date().toISOString();
+  max.value = new Date();
 });
 
 onMounted(async () => {
   if (route.path.includes("add")) {
     await sleep(500);
-    await addSubDream();
+    addSubDream();
   }
 });
 </script>
@@ -146,11 +151,11 @@ onMounted(async () => {
     </view-actions>
 
     <v-card
-      v-for="(dream, index) of dream.dreams"
+      v-for="(d, index) of dream.dreams"
       :key="index"
       class="ma-auto py-4 my-5"
       max-width="800"
-      :color="settings.colors.topBarColor"
+      color="transparent"
     >
       <v-row align="center" justify="center">
         <v-col cols="8">
@@ -159,12 +164,12 @@ onMounted(async () => {
             :style="{ color: settings.colors.textColor }"
           >
             Dream {{ index + 1 }} -
-            {{ dream.time ? dream.time : "No Time Set" }}
+            {{ d.time ? d.time : "No Time Set" }}
           </v-card-subtitle>
         </v-col>
         <v-col cols="4">
           <v-card-subtitle class="text-right pb-3">
-            <v-icon @click="openEditArea(dream, index)" color="orange">
+            <v-icon @click="openEditArea(d, index)" color="orange">
               mdi-pencil
             </v-icon>
           </v-card-subtitle>
@@ -174,7 +179,7 @@ onMounted(async () => {
         class="text-left text-wrap"
         :style="{ color: settings.colors.textColor }"
       >
-        {{ dream.subDream }}
+        {{ d.subDream }}
       </v-card-subtitle>
     </v-card>
 
@@ -209,14 +214,13 @@ onMounted(async () => {
     <v-slide-y-reverse-transition>
       <v-sheet
         v-if="editSheet"
-        v-model="editSheet"
         :style="{ bottom: mobile ? '55px' : '0' }"
         max-width="800"
         min-width="100%"
         position="fixed"
         location="bottom center"
       >
-        <v-card :color="settings.colors.topBarColor" variant="flat">
+        <v-card color="black" variant="flat">
           <v-row align="center" justify="center">
             <v-col cols="6">
               <v-card-title>Edit Dream {{ selectedSubIndex + 1 }}</v-card-title>
@@ -264,7 +268,7 @@ onMounted(async () => {
     </v-slide-y-reverse-transition>
 
     <v-dialog v-model="tapDelete" max-width="300">
-      <v-card :color="settings.colors.topBarColor">
+      <v-card color="#222222">
         <v-card-title>Delete</v-card-title>
         <v-card-subtitle>Are you sure?</v-card-subtitle>
         <v-card-actions>

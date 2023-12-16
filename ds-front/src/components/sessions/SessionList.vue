@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { useMainStore } from "@/stores/main";
-import { useSessionStore } from "@/stores/sessions";
+import { useMainStore } from "@/store/main";
+import { useSessionStore } from "@/store/sessions";
 import { storeToRefs } from "pinia";
 // import { onMounted } from "vue";
 
@@ -39,13 +39,13 @@ function formatSessionDate(date: string): string {
 <template>
   <v-card
     v-if="sessions && sessions.length > 0"
-    class="mx-4 mt-4 ma-auto"
-    max-width="800"
-    :color="settings.colors.topBarColor"
+    class="ma-auto"
+    color="transparent"
   >
-    <v-list class="overflow-y-auto" :bg-color="settings.colors.topBarColor">
+    <v-list class="overflow-y-auto" bg-color="transparent">
       <template v-for="(session, index) of sessions" :key="index">
         <v-list-item
+          :base-color="settings.colors.textColor"
           :title="formatSessionDate(session.date)"
           :to="{ name: 'ViewSessionPage', params: { id: session._id } }"
         >
@@ -70,7 +70,7 @@ function formatSessionDate(date: string): string {
     </v-list>
   </v-card>
   <v-container v-else>
-    <v-card :color="settings.colors.topBarColor">
+    <v-card color="#222222">
       <v-card-title :style="{ color: settings.colors.textColor }">
         No Sessions Here Yet
       </v-card-title>

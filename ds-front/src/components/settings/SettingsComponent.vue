@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, ref, watch } from "vue";
-import { useMainStore } from "@/stores/main";
+import { useMainStore } from "@/store/main";
 import { storeToRefs } from "pinia";
 import { Colors } from "@/interfaces/settings.interface";
 
@@ -28,37 +28,39 @@ onMounted(() => {
 
 <template>
   <v-container>
-    <v-card class="ma-auto" max-width="500">
+    <v-card class="ma-auto" max-width="500" color="transparent">
       <v-btn-toggle
         :model-value="selectedColorButton"
         @update:modelValue="updateColorSelection"
         class="d-flex"
       >
         <v-btn
+          v-if="false"
           class="flex-grow-1"
           value="topBarColor"
           variant="tonal"
           :stacked="true"
         >
           <v-badge
+            v-if="false"
             :floating="true"
             location="center"
-            :color="settings.colors.topBarColor"
             :bordered="true"
             :dot="true"
           ></v-badge>
           <v-icon class="mt-1"> mdi-format-line-weight </v-icon>
         </v-btn>
         <v-btn
+          v-if="false"
           class="flex-grow-1"
           value="backgroundColor"
           variant="tonal"
           :stacked="true"
         >
           <v-badge
+            v-if="false"
             :floating="true"
             location="center"
-            :color="settings.colors.backgroundColor"
             :bordered="true"
             :dot="true"
           ></v-badge>
@@ -116,17 +118,19 @@ onMounted(() => {
         :hide-canvas="true"
         :show-swatches="true"
         swatches-max-height="350"
+        color="transparent"
       ></v-color-picker>
     </v-card>
-    <v-card class="ma-auto" color="transparent" max-width="500">
-      <v-btn
-        @click="reset"
-        class="mt-5"
-        :color="settings.colors.completeBtnColor"
-        :block="true"
-      >
-        Reset
-      </v-btn>
-    </v-card>
+
+    <v-btn
+      absolute
+      bottom
+      @click="reset"
+      class="mt-5"
+      :color="settings.colors.completeBtnColor"
+      :block="true"
+    >
+      Reset
+    </v-btn>
   </v-container>
 </template>

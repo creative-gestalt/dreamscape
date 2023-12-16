@@ -1,73 +1,41 @@
-import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
-import vuetify from "vite-plugin-vuetify";
-import { VitePWA } from "vite-plugin-pwa";
+// Plugins
+import vue from '@vitejs/plugin-vue'
+import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+import ViteFonts from 'unplugin-fonts/vite'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const path = require("path");
+// Utilities
+import { defineConfig } from 'vite'
+import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  build: {
-    manifest: true,
-  },
   plugins: [
-    vue(),
-    // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
+    vue({
+      template: { transformAssetUrls },
+    }),
+    // https://github.com/vuetifyjs/vuetify-loader/tree/master/packages/vite-plugin#readme
     vuetify({
       autoImport: true,
     }),
-    VitePWA({
-      registerType: "autoUpdate",
-      manifest: {
-        name: "Dreamscape",
-        short_name: "Dreamscape",
-        description: "Tracker for dreams and QA sessions.",
-        theme_color: "#00000000",
-        icons: [
+    ViteFonts({
+      google: {
+        families: [
           {
-            src: "./img/icons/android-chrome-192x192.png",
-            sizes: "192x192",
-            type: "image/png",
-          },
-          {
-            src: "./img/icons/android-chrome-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
-          },
-          {
-            src: "./img/icons/android-chrome-maskable-192x192.png",
-            sizes: "192x192",
-            type: "image/png",
-            purpose: "maskable",
-          },
-          {
-            src: "./img/icons/android-chrome-maskable-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
-            purpose: "maskable",
+            name: 'Roboto',
+            styles: 'wght@100;300;400;500;700;900',
           },
         ],
       },
     }),
   ],
-  define: { "process.env": process.env },
+  define: { 'process.env': {} },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src"),
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
+    extensions: ['.js', '.json', '.jsx', '.mjs', '.ts', '.tsx', '.vue'],
   },
-  /* remove the need to specify .vue files https://vitejs.dev/config/#resolve-extensions
-  resolve: {
-    extensions: [
-      '.js',
-      '.json',
-      '.jsx',
-      '.mjs',
-      '.ts',
-      '.tsx',
-      '.vue',
-    ]
+  server: {
+    port: 5174,
   },
-  */
-});
+})

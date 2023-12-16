@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import DataTable from "@/components/shared/DataTable.vue";
 import { computed, onMounted, ref, watch } from "vue";
-import { useDreamStore } from "@/stores/dreams";
-import { useMainStore } from "@/stores/main";
+import { useDreamStore } from "@/store/dreams";
+import { useMainStore } from "@/store/main";
 import { storeToRefs } from "pinia";
 import { Dream } from "@/interfaces/dream.interface";
 import { sleep } from "@/utils/constants";
@@ -27,9 +27,8 @@ const itemsPerPage = ref(10);
 const perPage = ref([10, 15, 20]);
 const headers = [{ name: "Date", visible: false }];
 // computed
-const computedDreams = computed(() => dreams.value);
 const compPages = computed(() =>
-  Math.ceil(dreamsCount.value / itemsPerPage.value)
+  Math.ceil(dreamsCount.value / itemsPerPage.value),
 );
 // watchers
 watch(search, async (newSearch) => {
@@ -86,13 +85,13 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-card class="ma-4" max-width="800" :color="settings.colors.topBarColor">
+  <v-card class="ma-auto" color="transparent">
     <DataTable
-      :items="computedDreams"
+      :items="dreams"
       :headers="headers"
       :items-per-page="itemsPerPage"
       @click:row="handleClick"
-      :bg-color="settings.colors.topBarColor"
+      bg-color="transparent"
     >
       <template #search>
         <v-row class="pa-4">
@@ -111,7 +110,7 @@ onMounted(async () => {
             @change="dreamsForPage(1)"
             :items="perPage"
             class="ml-1"
-            style="max-width: 75px"
+            style="max-width: 85px"
             density="compact"
             hide-details
           >

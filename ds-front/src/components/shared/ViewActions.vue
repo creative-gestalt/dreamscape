@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useMainStore } from "@/stores/main";
+import { useMainStore } from "@/store/main";
 import { storeToRefs } from "pinia";
 // eslint-disable-next-line no-undef
 const props = defineProps<{
@@ -16,7 +16,7 @@ const { settings } = storeToRefs(mainStore);
 <style lang="scss"></style>
 
 <template>
-  <v-card class="ma-auto" max-width="800" :color="settings.colors.topBarColor">
+  <v-card class="ma-auto" max-width="800" color="transparent">
     <v-container>
       <v-row align="center" justify="center" no-gutters>
         <v-col cols="8">

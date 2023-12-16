@@ -45,5 +45,5 @@ export const useDreamStore = defineStore(
     persist: {
       storage: sessionStorage,
     },
-  }
+  },
 );

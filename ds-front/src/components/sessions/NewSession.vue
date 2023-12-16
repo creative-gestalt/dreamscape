@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from "vue";
-import { useMainStore } from "@/stores/main";
-import { useSessionStore } from "@/stores/sessions";
+import { useMainStore } from "@/store/main";
+import { useSessionStore } from "@/store/sessions";
 import { storeToRefs } from "pinia";
 import { QA } from "@/interfaces/session.interface";
 import SnackBar from "@/components/shared/SnackBar.vue";
@@ -20,28 +20,29 @@ const answer = ref("");
 const timeout = 3000;
 const snackbar = ref(false);
 const snackText = ref("");
+const calendarModal = ref(false);
 const timeModal = ref(false);
-const date = ref("");
-const max = ref("");
+const date = ref({} as Date);
+const max = ref({} as Date);
 const time = ref(
   new Date().toLocaleString("en-US", {
     hour: "numeric",
     minute: "numeric",
     hour12: true,
-  })
+  }),
 );
 // template refs
 const questionRef = ref(null as any);
 const answerRef = ref(null as any);
 const timeRef = ref(null as any);
 // computed
-const computedDay = computed(() =>
-  date.value
-    ? new Date(date.value).toLocaleString("en-US", {
-        day: "numeric",
-      })
-    : ""
-);
+// const computedDay = computed(() =>
+//   date.value
+//     ? new Date(date.value).toLocaleString("en-US", {
+//         day: "numeric",
+//       })
+//     : "",
+// );
 // methods
 function setNewTime(): void {
   time.value = String(timeRef.value.value);
@@ -93,18 +94,18 @@ async function completeSession(): Promise<void> {
 }
 
 onMounted(() => {
-  date.value = max.value = new Date().toISOString();
+  date.value = max.value = new Date();
 });
 </script>
 
 <template>
   <v-container>
-    <v-row>
+    <v-row class="text-center">
       <v-col cols="12">
         <v-card
           class="pa-2 pt-3 ma-auto"
           max-width="800"
-          :color="settings.colors.topBarColor"
+          color="transparent"
           :hover="true"
         >
           <v-row class="align-center">
@@ -114,7 +115,7 @@ onMounted(() => {
             <v-col cols="11">
               <v-chip
                 v-for="(qa, index) of qas"
-                :key="qa + index"
+                :key="qa.question + index"
                 class="mb-2 mx-1"
                 :style="{ color: settings.colors.textColor }"
                 @click:close="deleteQuestionsAnswers(index)"
@@ -151,65 +152,39 @@ onMounted(() => {
           ></v-text-field>
 
           <v-row class="flex-nowrap mt-2" no-gutters>
-            <v-date-picker
-              timezone="America/Boise"
-              v-model="date"
-              :max-date="max"
-              min-date="1950-01-01"
-              :popover="{ visibility: 'click', placement: 'top' }"
-              :style="{
-                borderColor: settings.colors.iconColor,
-                backgroundColor: settings.colors.topBarColor,
-              }"
-              is-dark
-            >
-              <template v-slot="{ inputEvents }">
-                <v-btn
-                  class="mr-1"
-                  v-on="inputEvents"
-                  :color="settings.colors.backgroundColor"
-                  :style="{ color: settings.colors.textColor }"
-                  :icon="true"
-                  size="small"
-                >
-                  {{ computedDay }}
-                </v-btn>
-              </template>
-            </v-date-picker>
-            <v-btn
-              class="mr-1"
-              @click="timeModal = true"
-              :color="settings.colors.backgroundColor"
-              :style="{ color: settings.colors.textColor }"
-              :icon="true"
-              size="small"
-            >
-              <v-icon>mdi-clock-outline</v-icon>
-            </v-btn>
-            <v-btn
-              width="74%"
-              @click="addQuestionsAnswers({ question, answer })"
-              :color="settings.colors.backgroundColor"
-              :style="{ color: settings.colors.textColor }"
-              :rounded="true"
-            >
-              Add Q&A
-            </v-btn>
+            <v-col>
+              <v-btn
+                class="float-start"
+                @click="timeModal = true"
+                :style="{ color: settings.colors.textColor }"
+                :icon="true"
+                size="small"
+              >
+                <v-icon>mdi-clock-outline</v-icon>
+              </v-btn>
+              <v-btn
+                class="float-end"
+                width="74%"
+                @click="addQuestionsAnswers({ question, answer })"
+                :style="{ color: settings.colors.textColor }"
+                :rounded="true"
+              >
+                Add Q&A
+              </v-btn>
+            </v-col>
           </v-row>
         </v-card>
       </v-col>
     </v-row>
 
-    <v-sheet class="ma-auto" color="transparent" max-width="800">
-      <v-btn
-        class="mt-5"
-        @click="completeSession"
-        :color="settings.colors.completeBtnColor"
-        :block="true"
-      >
-        Complete
-      </v-btn>
-    </v-sheet>
+    <v-btn
+      class="mt-6"
+      @click="completeSession"
+      :color="settings.colors.completeBtnColor"
+      style="float: right"
+      variant="tonal"
+      icon="mdi-check-all"
+    ></v-btn>
 
     <SnackBar
       :toggle="snackbar"
@@ -218,8 +193,17 @@ onMounted(() => {
       @closeSnackbar="snackbar = false"
     ></SnackBar>
 
-    <v-dialog v-model="timeModal" max-width="300">
-      <v-card :color="settings.colors.topBarColor">
+    <v-dialog v-model="calendarModal" max-width="350" theme="light">
+      <v-date-picker
+        v-model="date"
+        :max="max"
+        max-width="350"
+        theme="dark"
+      ></v-date-picker>
+    </v-dialog>
+
+    <v-dialog v-model="timeModal" max-width="300" theme="light">
+      <v-card color="#222222">
         <v-card-title>Set Time</v-card-title>
         <v-container>
           <v-text-field

@@ -9,8 +9,8 @@ export const useMainStore = defineStore(
   () => {
     const settings = reactive({
       colors: {
-        topBarColor: "#333333",
-        backgroundColor: "#111111",
+        // topBarColor: "#222222",
+        // backgroundColor: "#111111",
         iconColor: "#000000",
         textColor: "#fff",
         completeBtnColor: "#007707",
@@ -27,8 +27,8 @@ export const useMainStore = defineStore(
     }
     async function reset(): Promise<void> {
       settings.colors = {
-        topBarColor: "#333333",
-        backgroundColor: "#111111",
+        // topBarColor: "#222222",
+        // backgroundColor: "#111111",
         iconColor: "#000000",
         textColor: "#fff",
         completeBtnColor: "#007707",
@@ -47,13 +47,13 @@ export const useMainStore = defineStore(
     }
     async function updateSettings(
       attribute: string,
-      value: string
+      value: string,
     ): Promise<void> {
       settings.colors[attribute as keyof Colors] = value;
       settings.colors = (
         await axios.put(
           `${server.baseURL}/updateSettings/${settings._id}`,
-          settings
+          settings,
         )
       ).data.colors;
     }
@@ -77,5 +77,5 @@ export const useMainStore = defineStore(
     persist: {
       storage: sessionStorage,
     },
-  }
+  },
 );

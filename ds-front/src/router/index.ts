@@ -1,69 +1,64 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
-import DreamsPage from "../views/DreamsPage.vue";
-const SessionsPage = () => import("../views/SessionsPage.vue");
-const ViewDreamPage = () => import("../views/ViewDreamPage.vue");
-const ViewSessionPage = () => import("../views/ViewSessionPage.vue");
-const DreamOverviewPage = () => import("../views/DreamOverviewPage.vue");
-const SettingsPage = () => import("../views/SettingsPage.vue");
+// Composables
+import { createRouter, createWebHistory } from 'vue-router'
 
-const routes: Array<RouteRecordRaw> = [
+const routes = [
   {
-    path: "/",
-    redirect: "/dreams",
+    path: '/',
+    redirect: '/new-dream',
   },
   {
-    path: "/dreams",
-    name: "DreamsPage",
-    component: DreamsPage,
-    meta: {
-      title: "Dreams",
-    },
+    path: '/new-dream',
+    name: 'NewDreamPage',
+    component: () => import('@/views/NewDreamPage.vue'),
+    meta: { title: 'New Dream' }
   },
   {
-    path: "/sessions",
-    name: "SessionPage",
-    component: SessionsPage,
-    meta: {
-      title: "Sessions",
-    },
+    path: '/dreams',
+    name: 'DreamsPage',
+    component: () => import('@/views/DreamsPage.vue'),
+    meta: { title: 'Dreams' }
   },
   {
-    path: "/dream/:id/:action",
-    name: "ViewDreamPage",
-    component: ViewDreamPage,
-    meta: {
-      title: "View Dream",
-    },
+    path: '/new-session',
+    name: 'NewSessionPage',
+    component: () => import('@/views/NewSessionPage.vue'),
+    meta: { title: 'New Session' }
   },
   {
-    path: "/session/:id",
-    name: "ViewSessionPage",
-    component: ViewSessionPage,
-    meta: {
-      title: "View Session",
-    },
+    path: '/sessions',
+    name: 'SessionsPage',
+    component: () => import('@/views/SessionsPage.vue'),
+    meta: { title: 'Sessions' }
   },
   {
-    path: "/dream-overview",
-    name: "DreamOverviewPage",
-    component: DreamOverviewPage,
-    meta: {
-      title: "Overview",
-    },
+    path: '/dream/:id/:action',
+    name: 'ViewDreamPage',
+    component: () => import('@/views/ViewDreamPage.vue'),
+    meta: { title: 'View Dream' }
   },
   {
-    path: "/settings",
-    name: "SettingsPage",
-    component: SettingsPage,
-    meta: {
-      title: "Settings",
-    },
+    path: '/session/:id',
+    name: 'ViewSessionPage',
+    component: () => import('@/views/ViewSessionPage.vue'),
+    meta: { title: 'New Session' }
   },
-];
+  {
+    path: '/dream-overview',
+    name: 'DreamOverviewPage',
+    component: () => import('@/views/DreamOverviewPage.vue'),
+    meta: { title: 'Time Overview' }
+  },
+  {
+    path: '/settings',
+    name: 'SettingsPage',
+    component: () => import('@/views/SettingsPage.vue'),
+    meta: { title: 'Settings' }
+  },
+]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(process.env.BASE_URL),
   routes,
-});
+})
 
-export default router;
+export default router

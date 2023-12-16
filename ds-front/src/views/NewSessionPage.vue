@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import DreamList from "@/components/dreams/DreamList.vue";
-import {onMounted, ref} from "vue";
+import { onMounted, ref } from "vue";
+import NewSession from "@/components/sessions/NewSession.vue";
 
 const show = ref(false);
 
@@ -12,7 +12,7 @@ onMounted(() => {
 <template>
   <v-fade-transition hide-on-leave>
     <div v-if="show">
-      <DreamList />
+      <NewSession />
     </div>
   </v-fade-transition>
 </template>
