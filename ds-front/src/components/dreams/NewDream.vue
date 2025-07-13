@@ -90,15 +90,32 @@ function addChip(value: string): void {
     snackbar.value = true;
   }
 }
+function restoreCachedDream(): void {
+  const cachedDream = getCache("dream");
+  if (cachedDream) {
+    dream.value = cachedDream;
+    cachingStatus.value = "Recovered dream";
+    cacheUpdateLoading.value = false;
+  } else {
+    cachingStatus.value = "No cached dream found";
+    cacheUpdateLoading.value = false;
+  }
+}
 function updateCache(): void {
   setTimeout(() => {
     cacheUpdateLoading.value = true;
     cachingStatus.value = "Caching dream...";
-    setTimeout(() => {
-      setCache("dream", dream.value, 60);
-      cachingStatus.value = "Dream cached";
+    if (dream.value.length === 0) {
+      cachingStatus.value = "Restore cached dream?";
       cacheUpdateLoading.value = false;
-    }, 1000);
+      return;
+    } else {
+      setTimeout(() => {
+        setCache("dream", dream.value, 60);
+        cachingStatus.value = "Dream cached";
+        cacheUpdateLoading.value = false;
+      }, 1000);
+    }
   }, 1000);
 }
 async function completeDream(): Promise<void> {
@@ -134,7 +151,6 @@ onMounted(() => {
   if (dream.value.length === 0) {
     // Check if dream is already cached
     const cachedDream = getCache("dream");
-    console.log(cachedDream);
     if (cachedDream) {
       dream.value = cachedDream;
       cachingStatus.value = "Recovered dream";
@@ -213,7 +229,13 @@ onMounted(() => {
               ></v-progress-circular>
             </v-chip>
           </div>
-          <div v-if="cachingStatus.length > 0 && !cacheUpdateLoading">
+          <div
+            v-if="
+              cachingStatus.length > 0 &&
+              !cachingStatus.includes('?') &&
+              !cacheUpdateLoading
+            "
+          >
             <v-chip
               class="mb-2 mx-1"
               :style="{ color: settings.colors.textColor }"
@@ -221,6 +243,11 @@ onMounted(() => {
               <span class="mr-1">{{ cachingStatus }}</span>
 
               <v-icon icon="mdi-check" size="16"></v-icon>
+            </v-chip>
+          </div>
+          <div v-if="cachingStatus.includes('?')">
+            <v-chip class="mb-2 mx-1" @click="restoreCachedDream" color="green">
+              Oops, restore dream?
             </v-chip>
           </div>
           <v-row class="flex-nowrap">
