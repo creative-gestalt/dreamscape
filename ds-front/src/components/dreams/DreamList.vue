@@ -145,6 +145,7 @@ onMounted(async () => {
       @update:modelValue="dreamsForPage"
       :length="compPages"
       :active-color="settings.colors.completeBtnColor"
+      total-visible="5"
       density="comfortable"
       variant="elevated"
     >

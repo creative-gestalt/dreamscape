@@ -15,7 +15,7 @@ import { AddDreamDto } from './dto/add-dream.dto';
 import { Dream } from './interfaces/dream.interface';
 import { ValidateObjectId } from '../shared/pipes/validate-object-id.pipes';
 
-@Controller()
+@Controller('api')
 export class DreamController {
   constructor(private readonly dreamsService: DreamsService) {}
 

@@ -3,12 +3,10 @@ import { computed, onBeforeMount, onMounted, ref } from "vue";
 import { useMainStore } from "@/store/main";
 import { storeToRefs } from "pinia";
 import { Dream, SubDream } from "@/interfaces/dream.interface";
-import { useDisplay } from "vuetify";
 import { useRoute, useRouter } from "vue-router";
 import { sleep } from "@/utils/constants";
 import ViewActions from "@/components/shared/ViewActions.vue";
-import axios from "axios";
-import { server } from "@/utils/server";
+import { getDream, updateDream, deleteDreams } from "@/services/dream.service";
 
 // router
 const router = useRouter();
@@ -17,17 +15,15 @@ const route = useRoute();
 const mainStore = useMainStore();
 const { settings } = storeToRefs(mainStore);
 // data
-const mobile = useDisplay().xs.value;
 const id = ref("");
 const dream = ref({} as Dream);
 const dreamTime = ref("");
 const keywords = ref("");
 const edit = ref(false);
 const max = ref({} as Date);
-const selectedSubIndex = ref(0);
+const selectedSubIndex = ref(-1);
 const selectedSubDream = ref({} as SubDream);
-const addDream = ref(false);
-const editSheet = ref(false);
+const addingDream = ref(false);
 const tapDelete = ref(false);
 const time = ref(
   new Date().toLocaleString("en-US", {
@@ -45,35 +41,21 @@ const computedDay = computed(() =>
       })
     : "",
 );
+const isEditing = (index: number) => {
+  return selectedSubIndex.value === index;
+};
 // methods
-async function getDream(payload: Dream): Promise<Dream> {
-  return await axios
-    .get(`${server.baseURL}/getDream/${payload._id}`)
-    .then((result) => result.data);
-}
-async function updateDream(payload: Dream): Promise<void> {
-  return await axios.put(
-    `${server.baseURL}/updateDream?dreamID=${payload._id}`,
-    payload,
-  );
-}
-async function deleteDreams(payload: Dream[]): Promise<void> {
-  await axios.post(`${server.baseURL}/deleteDreams`, payload);
-}
 function updateSubDream(): void {
-  dream.value.dreams[selectedSubIndex.value].subDream =
-    selectedSubDream.value.subDream;
-  dream.value.dreams[selectedSubIndex.value].time = selectedSubDream.value.time;
-  editSheet.value = false;
+  dream.value.dreams[selectedSubIndex.value] = selectedSubDream.value;
+  selectedSubIndex.value = -1;
   submitDream();
 }
 function openEditArea(subDream: SubDream, index: number): void {
   selectedSubDream.value = subDream;
   selectedSubIndex.value = index;
-  editSheet.value = true;
 }
 function addSubDream(): void {
-  addDream.value = true;
+  addingDream.value = true;
   dream.value.dreams.push({ subDream: "", time: time.value });
   time.value = new Date().toLocaleString("en-US", {
     hour: "numeric",
@@ -83,17 +65,19 @@ function addSubDream(): void {
   const index = dream.value.dreams.length - 1;
   openEditArea(dream.value.dreams[index], index);
 }
-function cancelEdit(): void {
-  if (addDream.value) {
+function deleteConfirmation(): void {
+  if (addingDream.value) {
     dream.value.dreams.pop();
-    addDream.value = false;
+    addingDream.value = false;
+    selectedSubIndex.value = -1;
+  } else {
+    tapDelete.value = true;
   }
-  editSheet.value = false;
 }
 function deleteSubDream(): void {
   dream.value.dreams.splice(selectedSubIndex.value, 1);
-  editSheet.value = false;
   tapDelete.value = false;
+  selectedSubIndex.value = -1;
   submitDream();
 }
 function removeKeyword(item: string): void {
@@ -109,12 +93,13 @@ async function submitDream(): Promise<void> {
   const date = new Date(dream.value.date).toISOString();
   const newDate =
     date.slice(0, 11) + dreamTime.value + date.slice(19, date.length);
-  await updateDream({
+  await updateDream(id.value, {
     _id: id.value,
     date: newDate,
     dreams: dream.value.dreams,
     keywords: dream.value.keywords.length > 0 ? dream.value.keywords : [],
   });
+  addingDream.value = false;
 }
 async function deleteDream(): Promise<void> {
   const answer = confirm("Are you sure?");
@@ -126,7 +111,7 @@ async function deleteDream(): Promise<void> {
 
 onBeforeMount(async () => {
   id.value = String(route.params.id);
-  dream.value = (await getDream({ _id: id.value } as Dream)) as Dream;
+  dream.value = (await getDream(id.value)) as Dream;
   dreamTime.value = dream.value.date.slice(11, 19);
   max.value = new Date();
 });
@@ -160,27 +145,55 @@ onMounted(async () => {
       <v-row align="center" justify="center">
         <v-col cols="8">
           <v-card-subtitle
+            v-if="!isEditing(index)"
             class="text-left pb-3"
             :style="{ color: settings.colors.textColor }"
           >
             Dream {{ index + 1 }} -
             {{ d.time ? d.time : "No Time Set" }}
           </v-card-subtitle>
+          <v-text-field
+            v-if="isEditing(index)"
+            v-model="d.time"
+            variant="solo"
+            density="compact"
+          >
+          </v-text-field>
         </v-col>
         <v-col cols="4">
           <v-card-subtitle class="text-right pb-3">
-            <v-icon @click="openEditArea(d, index)" color="orange">
+            <v-icon
+              v-if="!isEditing(index)"
+              @click="openEditArea(d, index)"
+              color="orange"
+            >
               mdi-pencil
             </v-icon>
           </v-card-subtitle>
         </v-col>
       </v-row>
       <v-card-subtitle
+        v-if="!isEditing(index)"
         class="text-left text-wrap"
         :style="{ color: settings.colors.textColor }"
       >
         {{ d.subDream }}
       </v-card-subtitle>
+      <v-textarea
+        v-if="isEditing(index)"
+        v-model="d.subDream"
+        variant="solo"
+        density="compact"
+      ></v-textarea>
+      <v-card-actions v-if="isEditing(index)">
+        <v-btn color="red" @click="deleteConfirmation" variant="tonal">
+          Delete
+        </v-btn>
+        <v-spacer />
+        <v-btn color="green" @click="updateSubDream" variant="tonal">
+          Save
+        </v-btn>
+      </v-card-actions>
     </v-card>
 
     <v-card class="ma-auto" max-width="800" color="transparent">
@@ -210,62 +223,6 @@ onMounted(async () => {
         ></v-text-field>
       </v-card-subtitle>
     </v-card>
-
-    <v-slide-y-reverse-transition>
-      <v-sheet
-        v-if="editSheet"
-        :style="{ bottom: mobile ? '55px' : '0' }"
-        max-width="800"
-        min-width="100%"
-        position="fixed"
-        location="bottom center"
-      >
-        <v-card color="black" variant="flat">
-          <v-row align="center" justify="center">
-            <v-col cols="6">
-              <v-card-title>Edit Dream {{ selectedSubIndex + 1 }}</v-card-title>
-            </v-col>
-            <v-col cols="6">
-              <v-row class="d-flex justify-end">
-                <v-btn
-                  @click="tapDelete = true"
-                  class="float-right"
-                  color="transparent"
-                  :flat="true"
-                >
-                  <v-icon color="red darken-2">mdi-trash-can</v-icon>
-                </v-btn>
-                <v-btn
-                  @click="cancelEdit"
-                  class="float-right"
-                  color="transparent"
-                  :flat="true"
-                >
-                  <v-icon color="orange darken-2">mdi-window-close</v-icon>
-                </v-btn>
-              </v-row>
-            </v-col>
-          </v-row>
-          <v-container>
-            <v-textarea
-              ref="subDream"
-              v-model="selectedSubDream.subDream"
-              rows="6"
-            >
-              {{ selectedSubDream.subDream }}
-            </v-textarea>
-            <v-text-field v-model="selectedSubDream.time"></v-text-field>
-            <v-btn
-              @click="updateSubDream"
-              :color="settings.colors.completeBtnColor"
-              :block="true"
-            >
-              Submit
-            </v-btn>
-          </v-container>
-        </v-card>
-      </v-sheet>
-    </v-slide-y-reverse-transition>
 
     <v-dialog v-model="tapDelete" max-width="300">
       <v-card color="#222222">

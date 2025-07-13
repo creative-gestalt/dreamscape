@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import DefaultView from "./View.vue";
+import View from "@/layouts/default/View.vue";
 import { storeToRefs } from "pinia";
 import { useMainStore } from "@/store/main";
 import { useDisplay } from "vuetify";
@@ -114,9 +114,17 @@ onMounted(async () => {
           link
         ></v-list-item>
       </v-list>
+
+      <template v-slot:append>
+        <div class="text-center pa-2">
+          <span :style="{ color: settings.colors.textColor, opacity: 0.5 }">
+            v2.0.0
+          </span>
+        </div>
+      </template>
     </v-navigation-drawer>
 
-    <default-view />
+    <View />
 
     <v-bottom-navigation
       v-if="
@@ -127,7 +135,7 @@ onMounted(async () => {
       "
       :model-value="selectedNav"
       bg-color="black"
-      height="100"
+      height="80"
       mandatory
       grow
     >
@@ -159,12 +167,6 @@ onMounted(async () => {
         </v-btn>
       </div>
     </v-bottom-navigation>
-
-    <v-footer color="black" app>
-      <span :style="{ color: settings.colors.textColor, opacity: 0.35 }">
-        v2.0.0
-      </span>
-    </v-footer>
   </v-app>
 </template>
 

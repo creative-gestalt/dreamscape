@@ -7,6 +7,8 @@ import { SubDream } from "@/interfaces/dream.interface";
 import SnackBar from "@/components/shared/SnackBar.vue";
 import axios from "axios";
 import { server } from "@/utils/server";
+import { getCache, setCache } from "@/utils/cache";
+import { get } from "v-calendar/dist/types/src/utils/helpers";
 
 // stores
 const dreamStore = useDreamStore();
@@ -14,6 +16,8 @@ const { todaysDream } = storeToRefs(dreamStore);
 const mainStore = useMainStore();
 const { settings, refreshDreamList } = storeToRefs(mainStore);
 // data
+const cacheUpdateLoading = ref(false);
+const cachingStatus = ref("");
 const date = ref({} as Date);
 const max = ref({} as Date);
 const dream = ref("");
@@ -86,6 +90,17 @@ function addChip(value: string): void {
     snackbar.value = true;
   }
 }
+function updateCache(): void {
+  setTimeout(() => {
+    cacheUpdateLoading.value = true;
+    cachingStatus.value = "Caching dream...";
+    setTimeout(() => {
+      setCache("dream", dream.value, 60);
+      cachingStatus.value = "Dream cached";
+      cacheUpdateLoading.value = false;
+    }, 1000);
+  }, 1000);
+}
 async function completeDream(): Promise<void> {
   await mainStore.updateLoading(true);
   if (dream.value.length > 0) addDream(dream.value, false);
@@ -116,6 +131,17 @@ async function completeDream(): Promise<void> {
 onMounted(() => {
   date.value = max.value = new Date();
   getTodaysSubDreamCount();
+  if (dream.value.length === 0) {
+    // Check if dream is already cached
+    const cachedDream = getCache("dream");
+    console.log(cachedDream);
+    if (cachedDream) {
+      dream.value = cachedDream;
+      cachingStatus.value = "Recovered dream";
+    } else {
+      dream.value = "";
+    }
+  }
 });
 </script>
 
@@ -123,9 +149,10 @@ onMounted(() => {
   <v-container>
     <v-card
       v-if="todaysSubDreamCount > 0"
-      class="pa-0 mb-2"
+      class="ma-auto pa-0 mb-2"
       color="transparent"
       density="compact"
+      max-width="800"
     >
       <v-card-text class="my-n2">
         <v-row class="align-center" no-gutters>
@@ -172,7 +199,30 @@ onMounted(() => {
             :messages="time"
             :color="settings.colors.textColor"
             density="compact"
+            @update:modelValue="updateCache"
           ></v-textarea>
+          <div v-if="cacheUpdateLoading">
+            <v-chip class="mb-2 mx-1" color="orange">
+              <span class="mr-1">{{ cachingStatus }}</span>
+              <v-progress-circular
+                v-if="cacheUpdateLoading"
+                indeterminate
+                size="16"
+                width="2"
+                color="primary"
+              ></v-progress-circular>
+            </v-chip>
+          </div>
+          <div v-if="cachingStatus.length > 0 && !cacheUpdateLoading">
+            <v-chip
+              class="mb-2 mx-1"
+              :style="{ color: settings.colors.textColor }"
+            >
+              <span class="mr-1">{{ cachingStatus }}</span>
+
+              <v-icon icon="mdi-check" size="16"></v-icon>
+            </v-chip>
+          </div>
           <v-row class="flex-nowrap">
             <v-col cols="9" class="text-left">
               <v-btn

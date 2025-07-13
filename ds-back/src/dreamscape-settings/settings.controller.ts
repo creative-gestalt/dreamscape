@@ -12,7 +12,7 @@ import { SettingsService } from './settings.service';
 import { ValidateObjectId } from '../shared/pipes/validate-object-id.pipes';
 import { UpdateSettingsDto } from './dto/update-settings.dto';
 
-@Controller()
+@Controller('api')
 export class SettingsController {
   constructor(private readonly settingsService: SettingsService) {}
 
@@ -40,9 +40,8 @@ export class SettingsController {
     @Res() res,
     @Body() updateSettingsDto: UpdateSettingsDto,
   ) {
-    const settings = await this.settingsService.createSettings(
-      updateSettingsDto,
-    );
+    const settings =
+      await this.settingsService.createSettings(updateSettingsDto);
     return res.status(HttpStatus.OK).json(settings);
   }
 }

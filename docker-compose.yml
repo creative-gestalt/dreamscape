@@ -2,9 +2,9 @@ version: "3.9"
 services:
   dreamscape:
     container_name: dreamscape
-    image: creativegestalt/dreamscape:latest
+    image: creativegestalt/dreamscape:newui
     environment:
-      VITE_SERVER_ADDRESS: http://${SERVER_HOST}:${SERVER_PORT}
+      VITE_DOMAIN: http://${SERVER_HOST}:${SERVER_PORT}
       MONGODB_CONNSTRING: mongodb://${SERVER_HOST}:${DB_PORT}
     ports:
       - "${FRONT_PORT}:8080"

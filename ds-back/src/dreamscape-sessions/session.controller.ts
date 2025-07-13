@@ -15,7 +15,7 @@ import { AddSessionDto } from './dto/add-session.dto';
 import { Session } from './interfaces/session.interface';
 import { ValidateObjectId } from '../shared/pipes/validate-object-id.pipes';
 
-@Controller()
+@Controller('api')
 export class SessionController {
   constructor(private readonly sessionsService: SessionsService) {}
 
