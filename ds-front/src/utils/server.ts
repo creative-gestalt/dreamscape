@@ -10,10 +10,6 @@ function getServerUrl() {
     // Check if the current host matches any of the allowed hosts
     return host.trim() === currentHost || host.trim() === "*";
   });
-  console.log(isAllowedHost);
-  console.log(
-    `Current backend url: ${currentProtocol}//${currentHost}${serverPort}/api`,
-  );
   return isAllowedHost
     ? `${currentProtocol}//${currentHost}${serverPort}/api`
     : "";
